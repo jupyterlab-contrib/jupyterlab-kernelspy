@@ -39,6 +39,7 @@ class KernelSpyModel extends VDomModel {
 
   protected onMessage(sender: IPatchedKernel, message: KernelMessage.IMessage) {
     this._log.push(message);
+    this.stateChanged.emit(undefined);
   }
 
   private _log: KernelMessage.IMessage[] = [];
@@ -67,11 +68,11 @@ namespace Private {
     const origStdin = kernel.sendInputReply;
     patchable.sendShellMessage = function(msg: KernelMessage.IShellMessage, expectReply=false, disposeOnDone=true) {
       shellMessage.emit(msg);
-      return origShell(msg, expectReply, disposeOnDone);
+      return origShell.call(kernel, msg, expectReply, disposeOnDone);
     };
     patchable.sendInputReply = function(msg: KernelMessage.IInputReply) {
       stdinMessage.emit(msg);
-      return origStdin(msg);
+      return origStdin.call(kernel, msg);
     };
     return patchable;
   }

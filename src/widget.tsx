@@ -18,7 +18,11 @@ import {
 
 function Message(props: Message.IProperties): React.ReactElement<any> {
   return (
-    <div className='jp-kernelspy-message' />
+    <div className='jp-kernelspy-message'>
+      <pre>
+        { JSON.stringify(props.message, null, 2) }
+      </pre>
+    </div>
   );
 }
 
@@ -38,6 +42,9 @@ class KernelSpyView extends VDomRenderer<KernelSpyModel> {
     super();
     this.model = new KernelSpyModel(kernel);
     this.addClass('jp-kernelspy-view');
+    this.id = `kernelspy-${kernel.id}`;
+    this.title.label = 'Kernel spy';
+    this.title.closable = true;
   }
 
   /**
@@ -51,7 +58,13 @@ class KernelSpyView extends VDomRenderer<KernelSpyModel> {
           <Message message={msg}/>
       );
     }
-    return messages;
+    return [
+      <div>
+        <header>Message log</header>
+        {...messages}
+      </div>
+    ];
+
   }
 
 }

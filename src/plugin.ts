@@ -108,21 +108,6 @@ class KernelSpyExtension implements IKernelSpyExtension {
 
 
 /**
- * Initialization data for the jupyterlab-kernelspy extension.
- */
-const extension: JupyterLabPlugin<void> = {
-  id: 'jupyterlab-kernelspy',
-  autoStart: true,
-  requires: [ILayoutRestorer, INotebookTracker],
-  activate: (app: JupyterLab, restorer: ILayoutRestorer, tracker: INotebookTracker) => {
-    // TODO: Recreate views from layout restorer
-
-    addCommands(app, tracker);
-  }
-};
-
-
-/**
  * Add the main file view commands to the application's command registry.
  */
 function addCommands(app: JupyterLab, tracker: INotebookTracker): void {
@@ -158,5 +143,44 @@ function addCommands(app: JupyterLab, tracker: INotebookTracker): void {
   // TODO: Also add to command palette
 }
 
+
+
+/**
+ * Initialization data for the jupyterlab-kernelspy extension.
+ */
+const extension: JupyterLabPlugin<void> = {
+  id: 'jupyterlab-kernelspy',
+  autoStart: true,
+  requires: [ILayoutRestorer, INotebookTracker],
+  provides: IKernelSpyExtension,
+  activate: (app: JupyterLab, restorer: ILayoutRestorer, tracker: INotebookTracker) => {
+    let {commands, docRegistry} = app;
+    let extension = new KernelSpyExtension(commands);
+    docRegistry.addWidgetExtension('Notebook', extension);
+
+    // TODO: Recreate views from layout restorer
+
+    addCommands(app, tracker);
+    function refreshNewCommand() {
+      commands.notifyCommandChanged(CommandIDs.newSpy);
+    }
+    // Update the command registry when the notebook state changes.
+    tracker.currentChanged.connect(refreshNewCommand);
+
+    let prevWidget: NotebookPanel | null = tracker.currentWidget;
+    if (prevWidget) {
+      prevWidget.context.session.kernelChanged.connect(refreshNewCommand);
+    }
+    tracker.currentChanged.connect((tracker) => {
+      if (prevWidget) {
+        prevWidget.context.session.kernelChanged.disconnect(refreshNewCommand);
+      }
+      prevWidget = tracker.currentWidget;
+      if (prevWidget) {
+        prevWidget.context.session.kernelChanged.connect(refreshNewCommand);
+      }
+    });
+  }
+};
 
 export default extension;
