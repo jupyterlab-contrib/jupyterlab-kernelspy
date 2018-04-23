@@ -1,0 +1,36 @@
+
+
+.jp-kernelspy-view .jp-kernelspy-toolbar {
+  border-bottom: var(--jp-border-width) solid var(--jp-toolbar-border-color);
+  padding: 2px;
+  min-height: var(--jp-private-notebook-panel-toolbar-height);
+  box-shadow: var(--jp-toolbar-box-shadow);
+  background: var(--jp-toolbar-background);
+  z-index: 1;
+}
+
+.jp-kernelspy-view .jp-kernelspy-content {
+  display: flex;
+  white-space: nowrap;
+}
+
+.jp-kernelspy-view nav {
+  font-family: var(--jp-code-font-family);
+  font-size: var(--jp-code-font-size);
+  line-height: var(--jp-code-line-height);
+  border-right: var(--jp-border-width) solid var(--jp-border-color0);
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.jp-kernelspy-messagelog {
+  padding: 8px;
+  overflow: auto;
+  flex: 1 1 auto;
+  white-space: nowrap;
+}
+
+.jp-kernelspy-view ol.jp-kernelspy-threadlist {
+  list-style: none;
+  padding-left: 4px;
+}
