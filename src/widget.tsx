@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import {
-  VDomRenderer
+  VDomRenderer, Toolbar, ToolbarButton
 } from '@jupyterlab/apputils';
 
 import {
@@ -13,6 +13,10 @@ import {
 import {
   JSONValue
 } from '@phosphor/coreutils';
+
+import {
+  Panel, SplitPanel, Widget
+} from '@phosphor/widgets';
 
 import {
   ObjectInspector, ObjectLabel
@@ -99,58 +103,108 @@ namespace Message {
  * The main view for the kernel spy.
  */
 export
-class KernelSpyView extends VDomRenderer<KernelSpyModel> {
-  constructor(kernel: Kernel.IKernelConnection) {
+class ThreadView extends VDomRenderer<KernelSpyModel> {
+  constructor(model: KernelSpyModel) {
     super();
-    this.model = new KernelSpyModel(kernel);
-    this.addClass('jp-kernelspy-view');
-    this.id = `kernelspy-${kernel.id}`;
-    this.title.label = 'Kernel spy';
-    this.title.closable = true;
-    this.title.icon = '';
+    this.model = model;
+    this.id = `kernelspy-threadnav-${model.kernel.id}`;
   }
-
-  protected onToggleThreaded() {
-    this.showThreads = !this.showThreads;
-    this.update();
-  } 
 
   /**
    * Render the extension discovery view using the virtual DOM.
    */
   protected render(): React.ReactElement<any>[] {
     const model = this.model!;
-    const entries = [];
-    if (this.showThreads) {
-      // Show thread navigator
-      entries.push(
-        <ThreadNavigator threads={model.tree} key="thread-navigator"/>
-      );
-    }
+    // Show thread navigator
+    return [
+      <ThreadNavigator threads={model.tree} key="thread-navigator"/>
+    ];
+  }
+
+}
+
+
+/**
+ * The main view for the kernel spy.
+ */
+export
+class MessageLogView extends VDomRenderer<KernelSpyModel> {
+  constructor(model: KernelSpyModel) {
+    super();
+    this.model = model;
+    this.id = `kernelspy-messagelog-${model.kernel.id}`;
+  }
+
+  /**
+   * Render the extension discovery view using the virtual DOM.
+   */
+  protected render(): React.ReactElement<any>[] {
+    const model = this.model!;
     const messages = [];
     for (let msg of model.log) {
       messages.push(
         <Message message={msg} key={`message-${msg.header.msg_id}`} />
       );
     }
-    entries.push(
+    return [
       <div key="message-log" className="jp-kernelspy-messagelog">
         {...messages}
       </div>
-    )
-    return [
-      <div>
-        <div className="jp-kernelspy-toolbar">
-          <button onClick={() => this.onToggleThreaded()}>Threaded</button>
-        </div>
-        <div className="jp-kernelspy-content">
-          {...entries}
-        </div>
-      </div>
     ];
+  }
+}
+
+
+/**
+ * The main view for the kernel spy.
+ */
+export
+class KernelSpyView extends Panel {
+  constructor(kernel: Kernel.IKernelConnection) {
+    super();
+    this._model = new KernelSpyModel(kernel);
+    this.addClass('jp-kernelspy-view');
+    this.id = `kernelspy-${kernel.id}`;
+    this.title.label = 'Kernel spy';
+    this.title.closable = true;
+    this.title.icon = '';
+
+    this._toolbar = new Toolbar();
+    this._toolbar.addClass('jp-kernelspy-toolbar');
+    let threads = new ToolbarButton({onClick: () => this.onToggleThreaded()})
+    this._toolbar.addItem('Threaded', threads);
+
+    this._content = new SplitPanel();
+    this._content.addClass('jp-kernelspy-content');
+
+    this._threads = new ThreadView(this._model);
+    this._messagelog = new MessageLogView(this._model);
+
+    this._content.addWidget(this._threads);
+    this._content.addWidget(this._messagelog);
+
+    this.addWidget(this._toolbar);
+    this.addWidget(this._content);
+
 
   }
 
+  get model(): KernelSpyModel {
+    return this._model;
+  }
+
+  protected onToggleThreaded() {
+    this.showThreads = !this.showThreads;
+    this._threads.hide();
+  }
+
+  private _toolbar: Toolbar<Widget>;
+  private _content: SplitPanel;
+  private _threads: VDomRenderer<KernelSpyModel>;
+  private _messagelog: VDomRenderer<KernelSpyModel>;
+
   protected showThreads: boolean = false;
+
+  private _model: KernelSpyModel;
 
 }
