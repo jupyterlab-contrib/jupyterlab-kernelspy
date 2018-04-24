@@ -75,7 +75,6 @@ function msgNodeRenderer(args: IRendererArgs) {
   if (depth !== 0) {
     return <ObjectLabel
       name={name}
-      depth={depth+1}
       data={data}
       isNonenumerable={isNonenumerable}
     />;
