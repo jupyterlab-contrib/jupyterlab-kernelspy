@@ -5,12 +5,16 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  Toolbar, ToolbarButton
+  Toolbar, ToolbarButton, ICommandPalette
 } from '@jupyterlab/apputils';
 
 import {
   DocumentRegistry
 } from '@jupyterlab/docregistry';
+
+import {
+  IMainMenu
+} from '@jupyterlab/mainmenu';
 
 import {
   INotebookModel, NotebookPanel, INotebookTracker
@@ -110,7 +114,12 @@ class KernelSpyExtension implements IKernelSpyExtension {
 /**
  * Add the main file view commands to the application's command registry.
  */
-function addCommands(app: JupyterLab, tracker: INotebookTracker): void {
+function addCommands(
+    app: JupyterLab,
+    tracker: INotebookTracker,
+    palette: ICommandPalette,
+    menu: IMainMenu
+    ): void {
   const { commands, shell } = app;
 
   /**
@@ -142,7 +151,14 @@ function addCommands(app: JupyterLab, tracker: INotebookTracker): void {
     }
   });
 
-  // TODO: Also add to command palette
+  palette.addItem({
+    command: CommandIDs.newSpy,
+    category: 'Kernel',
+  });
+
+  menu.kernelMenu.addGroup([
+    { command: CommandIDs.newSpy },
+  ]);
 }
 
 
@@ -153,16 +169,22 @@ function addCommands(app: JupyterLab, tracker: INotebookTracker): void {
 const extension: JupyterLabPlugin<void> = {
   id: 'jupyterlab-kernelspy',
   autoStart: true,
-  requires: [ILayoutRestorer, INotebookTracker],
+  requires: [ILayoutRestorer, INotebookTracker, ICommandPalette, IMainMenu],
   provides: IKernelSpyExtension,
-  activate: (app: JupyterLab, restorer: ILayoutRestorer, tracker: INotebookTracker) => {
+  activate: (
+      app: JupyterLab,
+      restorer: ILayoutRestorer,
+      tracker: INotebookTracker,
+      palette: ICommandPalette,
+      mainMenu: IMainMenu,
+      ) => {
     let {commands, docRegistry} = app;
     let extension = new KernelSpyExtension(commands);
     docRegistry.addWidgetExtension('Notebook', extension);
 
     // TODO: Recreate views from layout restorer
 
-    addCommands(app, tracker);
+    addCommands(app, tracker, palette, mainMenu);
     function refreshNewCommand() {
       commands.notifyCommandChanged(CommandIDs.newSpy);
     }

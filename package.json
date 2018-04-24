@@ -39,6 +39,7 @@
   "devDependencies": {
     "@jupyterlab/notebook": "^0.16.2",
     "@jupyterlab/services": "^2.0.2",
+    "@jupyterlab/mainmenu": "^0.5.2",
     "@phosphor/commands": "^1.4.0",
     "rimraf": "^2.6.1",
     "typescript": "~2.8.3"
