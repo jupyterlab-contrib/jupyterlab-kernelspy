@@ -9,7 +9,7 @@
   z-index: 1;
 }
 
-.jp-kernelspy-messagelog {
+.jp-kernelspy-view .jp-kernelspy-messagelog {
   padding: 8px;
   overflow: auto;
   white-space: nowrap;
@@ -23,4 +23,24 @@
   grid-column-gap: 12px;
   grid-row-gap: 2px;
   align-content: start;
+}
+
+.jp-kernelspy-view .jp-kernelspy-divider {
+  grid-column-end: span 2;
+  border-bottom: var(--jp-border-width) solid var(--jp-border-color2);
+  padding-top: 2px;
+  margin-bottom: 3px;
+}
+
+.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children,
+.jp-kernelspy-view li[role=treeitem] > div > span:first-child {
+  content: var(--jp-image-caretright);
+}
+
+.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children.jp-mod-collapsed {
+  content: var(--jp-image-caretdown);
+}
+
+.jp-kernelspyIcon {
+  background-image: var(--jp-icon-json);
 }

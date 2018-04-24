@@ -92,6 +92,8 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
   const msg_id = msg.header.msg_id;
   const threadStateClass = props.collapsed ?
     'jp-mod-collapsed' : '';
+  const hasChildrenClass = props.hasChildren ?
+    'jp-mod-children' : '';
   const threadCollapser = props.hasChildren ? props.collapsed ? '+ ' : '- ' : '';
   return [
     <div
@@ -100,7 +102,9 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
       onClick={() => { props.onCollapse(props.message); }}
     >
       <div style={{paddingLeft: 16 * props.depth}}>
-        <span className={`jp-kernelspy-threadcollapser ${threadStateClass}`}>
+        <span className={
+          `jp-kernelspy-threadcollapser ${threadStateClass} ${hasChildrenClass}`
+        }>
           {threadCollapser}
         </span>
         <span className="jp-kernelspy-threadlabel">
@@ -147,8 +151,17 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
     
     let threads = new ThreadIterator(model.tree, this.collapsed)
 
+    let first = true;
     each(threads, ({msg, hasChildren}) => {
       const depth = model.depth(msg);
+      if (depth === 0) {
+        if (first) {
+          first = false;
+        } else {
+          // Insert spacer between main threads
+          elements.push(<div className='jp-kernelspy-divider' />);
+        }
+      }
       const collapsed = this.collapsed[msg.header.msg_id];
       elements.push(...Message({
         message: msg,
@@ -183,7 +196,7 @@ class KernelSpyView extends Widget {
     this.id = `kernelspy-${kernel.id}`;
     this.title.label = 'Kernel spy';
     this.title.closable = true;
-    this.title.icon = '';
+    this.title.iconClass = 'jp-kernelspyIcon';
     
     let layout = this.layout = new BoxLayout();
 
