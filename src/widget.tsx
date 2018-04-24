@@ -72,16 +72,17 @@ interface IRendererArgs {
 
 function msgNodeRenderer(args: IRendererArgs) {
   const {name, depth, isNonenumerable, data} = args;
+  const msg = data as any as KernelMessage.IMessage;
   if (depth !== 0) {
     return <ObjectLabel
+      key={`node-${msg.header.msg_id}`}
       name={name}
       data={data}
       isNonenumerable={isNonenumerable}
     />;
   }
-  const msg = data as any as KernelMessage.IMessage;
   return (
-    <span>
+    <span key={`node-${msg.header.msg_id}`}>
       {msg.header.msg_id}
     </span>
   );
@@ -150,9 +151,9 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
     const elements: React.ReactElement<any>[] = [];
 
     elements.push(
-      <span className='jp-kernelspy-logheader'>Threads</span>,
-      <span className='jp-kernelspy-logheader'>Contents</span>,
-      <span className='jp-kernelspy-logheader jp-kernelspy-divider' />,
+      <span key='header-thread' className='jp-kernelspy-logheader'>Threads</span>,
+      <span key='header-contents' className='jp-kernelspy-logheader'>Contents</span>,
+      <span key='header-divider' className='jp-kernelspy-logheader jp-kernelspy-divider' />,
     );
     
     let threads = new ThreadIterator(model.tree, this.collapsed)
@@ -165,7 +166,10 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
           first = false;
         } else {
           // Insert spacer between main threads
-          elements.push(<span className='jp-kernelspy-divider' />);
+          elements.push(<span
+            key={`'divider-${msg.header.msg_id}`}
+            className='jp-kernelspy-divider'
+          />);
         }
       }
       const collapsed = this.collapsed[msg.header.msg_id];
