@@ -9,28 +9,18 @@
   z-index: 1;
 }
 
-.jp-kernelspy-view .jp-kernelspy-content {
-  display: flex;
-  white-space: nowrap;
-}
-
-.jp-kernelspy-view nav {
-  font-family: var(--jp-code-font-family);
-  font-size: var(--jp-code-font-size);
-  line-height: var(--jp-code-line-height);
-  border-right: var(--jp-border-width) solid var(--jp-border-color0);
-  margin-right: 8px;
-  white-space: nowrap;
-}
-
 .jp-kernelspy-messagelog {
   padding: 8px;
   overflow: auto;
-  flex: 1 1 auto;
   white-space: nowrap;
-}
-
-.jp-kernelspy-view ol.jp-kernelspy-threadlist {
-  list-style: none;
-  padding-left: 4px;
+  font-family: var(--jp-code-font-family);
+  font-size: var(--jp-code-font-size);
+  line-height: var(--jp-code-line-height);
+  color: var(--jp-content-font-color1);
+  background-color: var(--jp-layout-color0);
+  display: grid;
+  grid-template-columns: max-content auto;
+  grid-column-gap: 12px;
+  grid-row-gap: 2px;
+  align-content: start;
 }
