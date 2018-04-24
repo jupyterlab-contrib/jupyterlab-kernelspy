@@ -1,5 +1,0 @@
-
-
-declare module 'react-inspector';
-
-
