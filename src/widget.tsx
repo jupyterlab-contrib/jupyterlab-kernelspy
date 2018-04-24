@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import {
-  VDomRenderer, Toolbar
+  VDomRenderer, Toolbar, ToolbarButton
 } from '@jupyterlab/apputils';
 
 import {
@@ -52,7 +52,7 @@ const theme = {
   OBJECT_VALUE_BOOLEAN_COLOR: 'var(--jp-mirror-editor-builtin-color))',
   OBJECT_VALUE_FUNCTION_KEYWORD_COLOR: 'var(--jp-mirror-editor-def-color))',
 
-  ARROW_COLOR: 'var(--jp-content-font-color1)',
+  ARROW_COLOR: 'var(--jp-content-font-color2)',
   ARROW_MARGIN_RIGHT: 3,
   ARROW_FONT_SIZE: 12,
 
@@ -148,6 +148,12 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
   protected render(): React.ReactElement<any>[] {
     const model = this.model!;
     const elements: React.ReactElement<any>[] = [];
+
+    elements.push(
+      <span className='jp-kernelspy-logheader'>Threads</span>,
+      <span className='jp-kernelspy-logheader'>Contents</span>,
+      <span className='jp-kernelspy-logheader jp-kernelspy-divider' />,
+    );
     
     let threads = new ThreadIterator(model.tree, this.collapsed)
 
@@ -159,7 +165,7 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
           first = false;
         } else {
           // Insert spacer between main threads
-          elements.push(<div className='jp-kernelspy-divider' />);
+          elements.push(<span className='jp-kernelspy-divider' />);
         }
       }
       const collapsed = this.collapsed[msg.header.msg_id];
@@ -172,6 +178,18 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
       }));
     });
     return elements;
+  }
+
+  collapseAll() {
+    for (let msg of this.model!.log) {
+      this.collapsed[msg.header.msg_id] = true;
+    }
+    this.update()
+  }
+
+  expandAll() {
+    this.collapsed = {};
+    this.update()
   }
 
   onCollapse(msg: KernelMessage.IMessage) {
@@ -210,6 +228,26 @@ class KernelSpyView extends Widget {
 
     BoxLayout.setStretch(this._toolbar, 0);
     BoxLayout.setStretch(this._messagelog, 1);
+
+    const collapseAll = new ToolbarButton({
+      onClick: () => {
+        this._messagelog.collapseAll();
+        collapseAll.node.blur();
+      },
+      className: 'jp-kernelspy-collapseAll jp-kernelspy-collapseIcon',
+      tooltip: 'Collapse all threads',
+    });
+    this._toolbar.addItem('collapse-all', collapseAll);
+
+    const expandAll = new ToolbarButton({
+      onClick: () => {
+        this._messagelog.expandAll();
+        expandAll.node.blur();
+      },
+      className: 'jp-kernelspy-expandAll jp-kernelspy-expandIcon',
+      tooltip: 'Expand all threads'
+    });
+    this._toolbar.addItem('expand-all', expandAll);
   }
 
   get model(): KernelSpyModel {
@@ -217,7 +255,7 @@ class KernelSpyView extends Widget {
   }
 
   private _toolbar: Toolbar<Widget>;
-  private _messagelog: VDomRenderer<KernelSpyModel>;
+  private _messagelog: MessageLogView;
 
   private _model: KernelSpyModel;
 

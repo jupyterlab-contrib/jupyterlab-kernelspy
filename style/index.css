@@ -25,6 +25,12 @@
   align-content: start;
 }
 
+.jp-kernelspy-view .jp-kernelspy-logheader {
+  font-family: var(--jp-ui-font-family);
+  font-size: var(--jp-ui-font-size1);
+  line-height: 1;
+}
+
 .jp-kernelspy-view .jp-kernelspy-divider {
   grid-column-end: span 2;
   border-bottom: var(--jp-border-width) solid var(--jp-border-color2);
@@ -32,15 +38,27 @@
   margin-bottom: 3px;
 }
 
-.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children,
-.jp-kernelspy-view li[role=treeitem] > div > span:first-child {
+.jp-kernelspy-view .jp-kernelspy-divider.jp-kernelspy-logheader {
+  border-bottom: var(--jp-border-width) solid var(--jp-border-color0);
+}
+
+.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children {
   content: var(--jp-image-caretright);
 }
 
-.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children.jp-mod-collapsed {
+.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children.jp-mod-collapsed,
+.jp-kernelspy-view .jp-kernelspy-collapseAll {
   content: var(--jp-image-caretdown);
 }
 
 .jp-kernelspyIcon {
   background-image: var(--jp-icon-json);
+}
+
+.jp-kernelspy-collapseIcon {
+  background-image: var(--jp-image-caretdown);
+}
+
+.jp-kernelspy-expandIcon {
+  background-image: var(--jp-image-caretright);
 }
