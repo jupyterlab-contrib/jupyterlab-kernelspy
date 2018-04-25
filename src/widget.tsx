@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 import * as React from 'react';
 
@@ -90,7 +90,7 @@ function msgNodeRenderer(args: IRendererArgs) {
 
 function Message(props: Message.IProperties): React.ReactElement<any>[] {
   const msg = props.message;
-  const msg_id = msg.header.msg_id;
+  const msgId = msg.header.msg_id;
   const threadStateClass = props.collapsed ?
     'jp-mod-collapsed' : '';
   const hasChildrenClass = props.hasChildren ?
@@ -98,8 +98,8 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
   const threadCollapser = props.hasChildren ? props.collapsed ? '+ ' : '- ' : '';
   return [
     <div
-      key={`threadnode-${msg_id}`}
-      className='jp-kernelspy-threadnode' 
+      key={`threadnode-${msgId}`}
+      className='jp-kernelspy-threadnode'
       onClick={() => { props.onCollapse(props.message); }}
     >
       <div style={{paddingLeft: 16 * props.depth}}>
@@ -108,12 +108,12 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
         }>
           {threadCollapser}
         </span>
-        <span className="jp-kernelspy-threadlabel">
+        <span className='jp-kernelspy-threadlabel'>
           {msg.channel}.{msg.header.msg_type}
         </span>
       </div>
     </div>,
-    <div key={`message-${msg_id}`} className='jp-kernelspy-message'>
+    <div key={`message-${msgId}`} className='jp-kernelspy-message'>
       <ObjectInspector data={msg} theme={theme} nodeRenderer={msgNodeRenderer}/>
     </div>
   ];
@@ -155,8 +155,8 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
       <span key='header-contents' className='jp-kernelspy-logheader'>Contents</span>,
       <span key='header-divider' className='jp-kernelspy-logheader jp-kernelspy-divider' />,
     );
-    
-    let threads = new ThreadIterator(model.tree, this.collapsed)
+
+    let threads = new ThreadIterator(model.tree, this.collapsed);
 
     let first = true;
     each(threads, ({msg, hasChildren}) => {
@@ -178,7 +178,7 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
         depth,
         collapsed,
         hasChildren,
-        onCollapse: (message) => { this.onCollapse(message)}
+        onCollapse: (message) => { this.onCollapse(message); },
       }));
     });
     return elements;
@@ -188,12 +188,12 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
     for (let msg of this.model!.log) {
       this.collapsed[msg.header.msg_id] = true;
     }
-    this.update()
+    this.update();
   }
 
   expandAll() {
     this.collapsed = {};
-    this.update()
+    this.update();
   }
 
   onCollapse(msg: KernelMessage.IMessage) {
@@ -219,7 +219,7 @@ class KernelSpyView extends Widget {
     this.title.label = 'Kernel spy';
     this.title.closable = true;
     this.title.iconClass = 'jp-kernelspyIcon';
-    
+
     let layout = this.layout = new BoxLayout();
 
     this._toolbar = new Toolbar();

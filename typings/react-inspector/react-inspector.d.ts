@@ -6,7 +6,7 @@
 
 
 declare module 'react-inspector' {
-    
+
     import * as React from 'react';
 
     export class DOMInspector extends React.Component<DOMInspector.IProperties> {
@@ -22,6 +22,14 @@ declare module 'react-inspector' {
     }
 
     export namespace ObjectInspector {
+        export interface INodeRendererArgs {
+            depth: number;
+            name: string;
+            data: any;
+            isNonenumerable: boolean;
+            expanded: boolean
+        }
+
         export interface IProperties {
             data: any;
 
@@ -35,12 +43,7 @@ declare module 'react-inspector' {
 
             sortObjectKeys?: boolean | ((a: string, b: string) => number);
 
-            nodeRenderer?: (args: {
-                depth: number;
-                name: string;
-                data: any;
-                isNonenumerable: boolean;
-                expanded: boolean }) => (React.ReactElement<any> | React.ReactElement<any>[]);
+            nodeRenderer?: (args: INodeRendererArgs) => React.ReactElement<any>;
 
 
             theme?: string | Partial<ITheme>;
@@ -61,7 +64,7 @@ declare module 'react-inspector' {
             data: any;
             theme?: string | Partial<ITheme>;
         }
-        
+
         export interface IState {
             sorted: boolean;
             sortIndexColumn: boolean;
@@ -110,7 +113,7 @@ declare module 'react-inspector' {
             dimmed: boolean;
             styles: React.CSSProperties;
         }
-        
+
         export interface IContexts {
             theme: ITheme;
         }
@@ -125,7 +128,7 @@ declare module 'react-inspector' {
             object: any;
             styles: React.CSSProperties;
         }
-        
+
         export interface IContexts {
             theme: ITheme;
         }

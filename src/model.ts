@@ -58,7 +58,7 @@ class ThreadIterator implements IIterator<ThreadIterator.IElement> {
       this._child = null;
     }
     // Move to next thread
-    ++this._index
+    ++this._index;
     if (this._index >= this._threads.length) {
       return undefined;
     }
@@ -123,8 +123,8 @@ class KernelSpyModel extends VDomModel {
   }
 
   get tree(): MessageThread[] {
-    return this._roots.map((root_id) => {
-      return this.getThread(root_id, false);
+    return this._roots.map((rootId) => {
+      return this.getThread(rootId, false);
     });
   }
 
@@ -152,13 +152,13 @@ class KernelSpyModel extends VDomModel {
     }
 
     const childMessages = this._childLUT[msg_id] || [];
-    let childThreads = childMessages.map((child_id) => {
-      return this.getThread(child_id, false);
+    let childThreads = childMessages.map((childId) => {
+      return this.getThread(childId, false);
     });
     const thread: MessageThread = {
       msg: this._messages[msg_id],
       children: childThreads,
-    }
+    };
     return thread;
   }
 
