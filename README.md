@@ -1,7 +1,8 @@
 # jupyterlab-kernelspy
 
-An extension for inspecting messages to/from a kernel in Jupyter Lab
+An extension for inspecting messages to/from a kernel in Jupyter Lab.
 
+![screenshot](screenshot.png)
 
 ## Prerequisites
 
@@ -29,4 +30,3 @@ To rebuild the package and the JupyterLab app:
 npm run build
 jupyter lab build
 ```
-
