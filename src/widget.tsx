@@ -72,17 +72,17 @@ interface IRendererArgs {
 
 function msgNodeRenderer(args: IRendererArgs) {
   const {name, depth, isNonenumerable, data} = args;
-  const msg = data as any as KernelMessage.IMessage;
   if (depth !== 0) {
     return <ObjectLabel
-      key={`node-${msg.header.msg_id}`}
+      key={`node-label`}
       name={name}
       data={data}
       isNonenumerable={isNonenumerable}
     />;
   }
+  const msg = data as any as KernelMessage.IMessage;
   return (
-    <span key={`node-${msg.header.msg_id}`}>
+    <span key={`node-label`}>
       {msg.header.msg_id}
     </span>
   );
