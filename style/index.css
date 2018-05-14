@@ -42,13 +42,21 @@
   border-bottom: var(--jp-border-width) solid var(--jp-border-color0);
 }
 
+button.jp-kernelspy-threadcollapser {
+  background-color: transparent;
+  border: none;
+}
+
 .jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children {
-  content: var(--jp-image-caretright);
+  background-image: var(--jp-image-caretdown);
+  background-repeat: no-repeat;
+  background-position-y: center;
+  height: 1em;
 }
 
 .jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children.jp-mod-collapsed,
 .jp-kernelspy-view .jp-kernelspy-collapseAll {
-  content: var(--jp-image-caretdown);
+  background-image: var(--jp-image-caretright);
 }
 
 .jp-kernelspyIcon {
@@ -56,9 +64,9 @@
 }
 
 .jp-kernelspy-collapseIcon {
-  background-image: var(--jp-image-caretdown);
+  background-image: var(--jp-image-caretright);
 }
 
 .jp-kernelspy-expandIcon {
-  background-image: var(--jp-image-caretright);
+  background-image: var(--jp-image-caretdown);
 }

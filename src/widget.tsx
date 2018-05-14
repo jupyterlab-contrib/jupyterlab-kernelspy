@@ -19,6 +19,10 @@ import {
 } from '@phosphor/coreutils';
 
 import {
+  Message as PhosphorMessage
+} from '@phosphor/messaging';
+
+import {
   Widget, BoxLayout
 } from '@phosphor/widgets';
 
@@ -95,7 +99,7 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
     'jp-mod-collapsed' : '';
   const hasChildrenClass = props.hasChildren ?
     'jp-mod-children' : '';
-  const threadCollapser = props.hasChildren ? props.collapsed ? '+ ' : '- ' : '';
+  const tabIndex = props.hasChildren ? 0 : -1;
   return [
     <div
       key={`threadnode-${msgId}`}
@@ -103,11 +107,13 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
       onClick={() => { props.onCollapse(props.message); }}
     >
       <div style={{paddingLeft: 16 * props.depth}}>
-        <span className={
-          `jp-kernelspy-threadcollapser ${threadStateClass} ${hasChildrenClass}`
-        }>
-          {threadCollapser}
-        </span>
+        <button
+          className={
+            `jp-kernelspy-threadcollapser ${threadStateClass} ${hasChildrenClass}`
+          }
+          tabIndex={tabIndex}
+        >
+        </button>
         <span className='jp-kernelspy-threadlabel'>
           {msg.channel}.{msg.header.msg_type}
         </span>
@@ -233,25 +239,32 @@ class KernelSpyView extends Widget {
     BoxLayout.setStretch(this._toolbar, 0);
     BoxLayout.setStretch(this._messagelog, 1);
 
-    const collapseAll = new ToolbarButton({
+    this.collapseAllButton = new ToolbarButton({
       onClick: () => {
         this._messagelog.collapseAll();
-        collapseAll.node.blur();
       },
       className: 'jp-kernelspy-collapseAll jp-kernelspy-collapseIcon',
       tooltip: 'Collapse all threads',
     });
-    this._toolbar.addItem('collapse-all', collapseAll);
+    this._toolbar.addItem('collapse-all', this.collapseAllButton);
 
-    const expandAll = new ToolbarButton({
+    this.expandAllButton = new ToolbarButton({
       onClick: () => {
         this._messagelog.expandAll();
-        expandAll.node.blur();
       },
       className: 'jp-kernelspy-expandAll jp-kernelspy-expandIcon',
       tooltip: 'Expand all threads'
     });
-    this._toolbar.addItem('expand-all', expandAll);
+    this._toolbar.addItem('expand-all', this.expandAllButton);
+  }
+
+  /**
+   * Handle `'activate-request'` messages.
+   */
+  protected onActivateRequest(msg: PhosphorMessage): void {
+    if (!this.node.contains(document.activeElement)) {
+      this.collapseAllButton.node.focus();
+    }
   }
 
   get model(): KernelSpyModel {
@@ -262,5 +275,8 @@ class KernelSpyView extends Widget {
   private _messagelog: MessageLogView;
 
   private _model: KernelSpyModel;
+
+  protected expandAllButton: ToolbarButton;
+  protected collapseAllButton: ToolbarButton;
 
 }
