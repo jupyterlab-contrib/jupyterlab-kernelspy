@@ -1,7 +1,7 @@
 'use strict';
 
 import {
-  JupyterLab, JupyterLabPlugin, ILayoutRestorer
+  JupyterLab, JupyterLabPlugin
 } from '@jupyterlab/application';
 
 import {
@@ -19,6 +19,10 @@ import {
 import {
   INotebookModel, NotebookPanel, INotebookTracker
 } from '@jupyterlab/notebook';
+
+import {
+  Kernel
+} from '@jupyterlab/services';
 
 import {
   find
@@ -56,7 +60,7 @@ namespace CommandIDs {
  * The token identifying the JupyterLab plugin.
  */
 export
-const IKernelSpyExtension = new Token<IKernelSpyExtension>('jupyter.extensions.nbdime');
+const IKernelSpyExtension = new Token<IKernelSpyExtension>('jupyter.extensions.kernelspy');
 
 export
 type IKernelSpyExtension = DocumentRegistry.IWidgetExtension<NotebookPanel, INotebookModel>;
@@ -142,7 +146,7 @@ function addCommands(
       if (!current) {
         return;
       }
-      const widget = new KernelSpyView(current.context.session.kernel!);
+      const widget = new KernelSpyView(current.context.session.kernel! as Kernel.IKernel);
       shell.addToMainArea(widget);
       if (args['activate'] !== false) {
         shell.activateById(widget.id);
@@ -168,11 +172,10 @@ function addCommands(
 const extension: JupyterLabPlugin<void> = {
   id: 'jupyterlab-kernelspy',
   autoStart: true,
-  requires: [ILayoutRestorer, INotebookTracker, ICommandPalette, IMainMenu],
+  requires: [INotebookTracker, ICommandPalette, IMainMenu],
   provides: IKernelSpyExtension,
   activate: (
       app: JupyterLab,
-      restorer: ILayoutRestorer,
       tracker: INotebookTracker,
       palette: ICommandPalette,
       mainMenu: IMainMenu,

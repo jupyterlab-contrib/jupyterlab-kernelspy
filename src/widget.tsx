@@ -165,22 +165,22 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
     let threads = new ThreadIterator(model.tree, this.collapsed);
 
     let first = true;
-    each(threads, ({msg, hasChildren}) => {
-      const depth = model.depth(msg);
+    each(threads, ({args, hasChildren}) => {
+      const depth = model.depth(args);
       if (depth === 0) {
         if (first) {
           first = false;
         } else {
           // Insert spacer between main threads
           elements.push(<span
-            key={`'divider-${msg.header.msg_id}`}
+            key={`'divider-${args.msg.header.msg_id}`}
             className='jp-kernelspy-divider'
           />);
         }
       }
-      const collapsed = this.collapsed[msg.header.msg_id];
+      const collapsed = this.collapsed[args.msg.header.msg_id];
       elements.push(...Message({
-        message: msg,
+        message: args.msg,
         depth,
         collapsed,
         hasChildren,
@@ -191,8 +191,8 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
   }
 
   collapseAll() {
-    for (let msg of this.model!.log) {
-      this.collapsed[msg.header.msg_id] = true;
+    for (let args of this.model!.log) {
+      this.collapsed[args.msg.header.msg_id] = true;
     }
     this.update();
   }
@@ -217,7 +217,7 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
  */
 export
 class KernelSpyView extends Widget {
-  constructor(kernel: Kernel.IKernelConnection) {
+  constructor(kernel: Kernel.IKernel) {
     super();
     this._model = new KernelSpyModel(kernel);
     this.addClass('jp-kernelspy-view');

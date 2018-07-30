@@ -5,10 +5,6 @@ import {
 } from '@phosphor/algorithm';
 
 import {
-  ISignal, Signal
-} from '@phosphor/signaling';
-
-import {
   VDomModel
 } from '@jupyterlab/apputils';
 
@@ -16,23 +12,15 @@ import {
   Kernel, KernelMessage
 } from '@jupyterlab/services';
 
-import {
-  DefaultKernel
-} from '@jupyterlab/services/lib/kernel/default';
-
-import {
-  deserialize
-} from '@jupyterlab/services/lib/kernel/serialize';
-
 
 export type MessageThread = {
-  msg: KernelMessage.IMessage;
+  args: Kernel.IAnyMessageArgs;
   children: MessageThread[];
 };
 
 
-function isHeader(candidate: {} | KernelMessage.IHeader): candidate is KernelMessage.IHeader {
-  return (candidate as any).msg_id !== undefined;
+function isHeader(candidate: {[key: string]: undefined} | KernelMessage.IHeader): candidate is KernelMessage.IHeader {
+  return candidate.msg_id !== undefined;
 }
 
 
@@ -63,11 +51,11 @@ class ThreadIterator implements IIterator<ThreadIterator.IElement> {
       return undefined;
     }
     const entry = this._threads[this._index];
-    if (entry.children.length > 0 && !this._collapsed[entry.msg.header.msg_id]) {
+    if (entry.children.length > 0 && !this._collapsed[entry.args.msg.header.msg_id]) {
       // Iterate over children after this
       this._child = new ThreadIterator(entry.children, this._collapsed);
     }
-    return {msg: entry.msg, hasChildren: entry.children.length > 0};
+    return {args: entry.args, hasChildren: entry.children.length > 0};
   }
 
   clone(): ThreadIterator {
@@ -90,7 +78,7 @@ export
 namespace ThreadIterator {
   export
   interface IElement {
-    msg: KernelMessage.IMessage;
+    args: Kernel.IAnyMessageArgs;
     hasChildren: boolean;
   }
 }
@@ -101,9 +89,9 @@ namespace ThreadIterator {
  */
 export
 class KernelSpyModel extends VDomModel {
-  constructor(kernel: Kernel.IKernelConnection) {
+  constructor(kernel: Kernel.IKernel) {
     super();
-    this._kernel = Private.patchKernel(kernel as DefaultKernel);
+    this._kernel = kernel;
     this._kernel.anyMessage.connect(this.onMessage, this);
   }
 
@@ -118,7 +106,7 @@ class KernelSpyModel extends VDomModel {
     return this._kernel;
   }
 
-  get log(): ReadonlyArray<KernelMessage.IMessage> {
+  get log(): ReadonlyArray<Kernel.IAnyMessageArgs> {
     return this._log;
   }
 
@@ -128,106 +116,67 @@ class KernelSpyModel extends VDomModel {
     });
   }
 
-  depth(msg: KernelMessage.IMessage | null): number {
-    if (msg === null) {
+  depth(args: Kernel.IAnyMessageArgs | null): number {
+    if (args === null) {
       return -1;
     }
     let depth = 0;
-    while (msg = this._findParent(msg)) {
+    while (args = this._findParent(args)) {
       ++depth;
     }
     return depth;
   }
 
-  getThread(msg_id: string, ancestors=true): MessageThread {
-    const msg = this._messages[msg_id];
+  getThread(msgId: string, ancestors=true): MessageThread {
+    const args = this._messages[msgId];
     if (ancestors) {
       // Work up to root, then work downwards
-      let root = msg;
+      let root = args;
       let candidate;
       while (candidate = this._findParent(root)) {
         root = candidate;
       }
-      return this.getThread(root.header.msg_id, false);
+      return this.getThread(root.msg.header.msg_id, false);
     }
 
-    const childMessages = this._childLUT[msg_id] || [];
+    const childMessages = this._childLUT[msgId] || [];
     let childThreads = childMessages.map((childId) => {
       return this.getThread(childId, false);
     });
     const thread: MessageThread = {
-      msg: this._messages[msg_id],
+      args: this._messages[msgId],
       children: childThreads,
     };
     return thread;
   }
 
-  protected onMessage(sender: IPatchedKernel, message: KernelMessage.IMessage) {
-    this._log.push(message);
-    this._messages[message.header.msg_id] = message;
-    const parent = this._findParent(message);
+  protected onMessage(sender: Kernel.IKernel, args: Kernel.IAnyMessageArgs) {
+    const {msg} = args;
+    this._log.push(args);
+    this._messages[msg.header.msg_id] = args;
+    const parent = this._findParent(args);
     if (parent === null) {
-      this._roots.push(message.header.msg_id);
+      this._roots.push(msg.header.msg_id);
     } else {
-      this._childLUT[parent.header.msg_id] = this._childLUT[parent.header.msg_id] || [];
-      this._childLUT[parent.header.msg_id].push(message.header.msg_id);
+      const header = parent.msg.header;
+      this._childLUT[header.msg_id] = this._childLUT[header.msg_id] || [];
+      this._childLUT[header.msg_id].push(msg.header.msg_id);
     }
     this.stateChanged.emit(undefined);
   }
 
-  private _findParent(msg: KernelMessage.IMessage): KernelMessage.IMessage | null {
-    if (isHeader(msg.parent_header)) {
-      return this._messages[msg.parent_header.msg_id] || null;
+  private _findParent(args: Kernel.IAnyMessageArgs): Kernel.IAnyMessageArgs | null {
+    if (isHeader(args.msg.parent_header)) {
+      return this._messages[args.msg.parent_header.msg_id] || null;
     }
     return null;
   }
 
-  private _log: KernelMessage.IMessage[] = [];
+  private _log: Kernel.IAnyMessageArgs[] = [];
 
-  private _kernel: IPatchedKernel;
+  private _kernel: Kernel.IKernel;
 
-  private _messages: {[key: string]: KernelMessage.IMessage} = {};
+  private _messages: {[key: string]: Kernel.IAnyMessageArgs} = {};
   private _childLUT: {[key: string]: string[]} = {};
   private _roots: string[] = [];
-}
-
-
-export
-interface IPatchedKernel extends Kernel.IKernel {
-  anyMessage: ISignal<this, KernelMessage.IMessage>;
-}
-
-
-
-namespace Private {
-  export
-  function patchKernel(kernel: DefaultKernel): IPatchedKernel {
-    const patchable = kernel as any as IPatchedKernel;
-    const anyMessage = new Signal<IPatchedKernel, KernelMessage.IMessage>(patchable);
-    patchable.anyMessage = anyMessage;
-    const origShell = kernel.sendShellMessage;
-    const origStdin = kernel.sendInputReply;
-    const origWSMessage = (kernel as any)._onWSMessage;
-    patchable.sendShellMessage = function(msg: KernelMessage.IShellMessage, expectReply=false, disposeOnDone=true) {
-      anyMessage.emit(msg);
-      return origShell.call(kernel, msg, expectReply, disposeOnDone);
-    };
-    patchable.sendInputReply = function(content: KernelMessage.IInputReply) {
-      let options: KernelMessage.IOptions = {
-        msgType: 'input_reply',
-        channel: 'stdin',
-        username: this._username,
-        session: this._clientId
-      };
-      let msg = KernelMessage.createMessage(options, content);
-      anyMessage.emit(msg);
-      return origStdin.call(kernel, content);
-    };
-    (patchable as any)._ws.onmessage = function(evt: MessageEvent) {
-      origWSMessage.call(kernel, evt);
-      let msg = deserialize(evt.data);
-      anyMessage.emit(msg);
-    }
-    return patchable;
-  }
 }
