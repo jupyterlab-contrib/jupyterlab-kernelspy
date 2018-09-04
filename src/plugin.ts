@@ -5,7 +5,7 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  Toolbar, ToolbarButton, ICommandPalette
+  ICommandPalette, CommandToolbarButton
 } from '@jupyterlab/apputils';
 
 import {
@@ -80,7 +80,7 @@ class KernelSpyExtension implements IKernelSpyExtension {
    */
   createNew(nb: NotebookPanel, context: DocumentRegistry.IContext<INotebookModel>): IDisposable {
     // Add buttons to toolbar
-    let buttons: ToolbarButton[] = [];
+    let buttons: CommandToolbarButton[] = [];
     let insertionPoint = -1;
     find(nb.toolbar.children(), (tbb, index) => {
       if (tbb.hasClass('jp-Notebook-toolbarCellType')) {
@@ -91,10 +91,7 @@ class KernelSpyExtension implements IKernelSpyExtension {
     });
     let i = 1;
     for (let id of [CommandIDs.newSpy]) {
-      let button = Toolbar.createFromCommand(this.commands, id);
-      if (button === null) {
-        throw new Error('Cannot create button, command not registered!');
-      }
+      let button = new CommandToolbarButton({id, commands: this.commands});
       if (insertionPoint >= 0) {
         nb.toolbar.insertItem(insertionPoint + i++, this.commands.label(id), button);
       } else {
