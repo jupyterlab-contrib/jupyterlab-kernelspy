@@ -136,7 +136,7 @@ function addCommands(
   commands.addCommand(CommandIDs.newSpy, {
     label: 'New kernel spy',
     caption: 'Open a window to inspect messages sent to/from a kernel',
-    iconClass: 'jp-kernelspyIcon',
+    iconClass: 'jp-Icon jp-Icon-16 jp-kernelspyIcon',
     isEnabled: hasKernel,
     execute: (args) => {
       let current = tracker.currentWidget;
