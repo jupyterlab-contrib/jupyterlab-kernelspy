@@ -243,7 +243,8 @@ class KernelSpyView extends Widget {
       onClick: () => {
         this._messagelog.collapseAll();
       },
-      className: 'jp-kernelspy-collapseAll jp-kernelspy-collapseIcon',
+      className: 'jp-kernelspy-collapseAll',
+      iconClassName: 'jp-kernelspy-collapseIcon jp-Icon jp-Icon-16',
       tooltip: 'Collapse all threads',
     });
     this._toolbar.addItem('collapse-all', this.collapseAllButton);
@@ -252,7 +253,8 @@ class KernelSpyView extends Widget {
       onClick: () => {
         this._messagelog.expandAll();
       },
-      className: 'jp-kernelspy-expandAll jp-kernelspy-expandIcon',
+      className: 'jp-kernelspy-expandAll',
+      iconClassName: 'jp-kernelspy-expandIcon jp-Icon jp-Icon-16',
       tooltip: 'Expand all threads'
     });
     this._toolbar.addItem('expand-all', this.expandAllButton);

@@ -51,11 +51,11 @@ button.jp-kernelspy-threadcollapser {
   background-image: var(--jp-image-caretdown);
   background-repeat: no-repeat;
   background-position-y: center;
+  vertical-align: middle;
   height: 1em;
 }
 
-.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children.jp-mod-collapsed,
-.jp-kernelspy-view .jp-kernelspy-collapseAll {
+.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children.jp-mod-collapsed {
   background-image: var(--jp-image-caretright);
 }
 
