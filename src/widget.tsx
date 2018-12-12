@@ -126,8 +126,7 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
 }
 
 namespace Message {
-  export
-  interface IProperties {
+  export interface IProperties {
     message: KernelMessage.IMessage;
     depth: number;
     collapsed: boolean;
@@ -140,8 +139,7 @@ namespace Message {
 /**
  * The main view for the kernel spy.
  */
-export
-class MessageLogView extends VDomRenderer<KernelSpyModel> {
+export class MessageLogView extends VDomRenderer<KernelSpyModel> {
   constructor(model: KernelSpyModel) {
     super();
     this.model = model;
@@ -215,8 +213,7 @@ class MessageLogView extends VDomRenderer<KernelSpyModel> {
 /**
  * The main view for the kernel spy.
  */
-export
-class KernelSpyView extends Widget {
+export class KernelSpyView extends Widget {
   constructor(kernel: Kernel.IKernel) {
     super();
     this._model = new KernelSpyModel(kernel);
