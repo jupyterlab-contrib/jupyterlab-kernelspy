@@ -1,7 +1,7 @@
 'use strict';
 
 import {
-  JupyterLab, JupyterLabPlugin
+  JupyterFrontEndPlugin, JupyterFrontEnd
 } from '@jupyterlab/application';
 
 import {
@@ -92,6 +92,7 @@ class KernelSpyExtension implements IKernelSpyExtension {
     let i = 1;
     for (let id of [CommandIDs.newSpy]) {
       let button = new CommandToolbarButton({id, commands: this.commands});
+      button.addClass('jp-kernelspy-nbtoolbarbutton')
       if (insertionPoint >= 0) {
         nb.toolbar.insertItem(insertionPoint + i++, this.commands.label(id), button);
       } else {
@@ -116,7 +117,7 @@ class KernelSpyExtension implements IKernelSpyExtension {
  * Add the main file view commands to the application's command registry.
  */
 function addCommands(
-    app: JupyterLab,
+    app: JupyterFrontEnd,
     tracker: INotebookTracker,
     palette: ICommandPalette,
     menu: IMainMenu
@@ -144,7 +145,7 @@ function addCommands(
         return;
       }
       const widget = new KernelSpyView(current.context.session.kernel! as Kernel.IKernel);
-      shell.addToMainArea(widget);
+      shell.add(widget, 'main');
       if (args['activate'] !== false) {
         shell.activateById(widget.id);
       }
@@ -166,13 +167,13 @@ function addCommands(
 /**
  * Initialization data for the jupyterlab-kernelspy extension.
  */
-const extension: JupyterLabPlugin<void> = {
+const extension: JupyterFrontEndPlugin<IKernelSpyExtension> = {
   id: 'jupyterlab-kernelspy',
   autoStart: true,
   requires: [INotebookTracker, ICommandPalette, IMainMenu],
   provides: IKernelSpyExtension,
   activate: (
-      app: JupyterLab,
+      app: JupyterFrontEnd,
       tracker: INotebookTracker,
       palette: ICommandPalette,
       mainMenu: IMainMenu,
@@ -203,6 +204,7 @@ const extension: JupyterLabPlugin<void> = {
         prevWidget.context.session.kernelChanged.connect(refreshNewCommand);
       }
     });
+    return extension;
   }
 };
 

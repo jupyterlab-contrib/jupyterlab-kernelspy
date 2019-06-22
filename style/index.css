@@ -70,3 +70,7 @@ button.jp-kernelspy-threadcollapser {
 .jp-kernelspy-expandIcon {
   background-image: var(--jp-image-caretdown);
 }
+
+.jp-kernelspy-nbtoolbarbutton .jp-ToolbarButtonComponent-label {
+  display: none;
+}

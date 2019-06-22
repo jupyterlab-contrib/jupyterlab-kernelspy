@@ -4,7 +4,7 @@
     "noImplicitAny": true,
     "noEmitOnError": true,
     "noUnusedLocals": true,
-    "module": "commonjs",
+    "module": "es2015",
     "moduleResolution": "node",
     "target": "ES6",
     "outDir": "./lib",

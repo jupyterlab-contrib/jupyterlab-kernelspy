@@ -30,19 +30,23 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@jupyterlab/application": "^0.19.1",
-    "@phosphor/algorithm": "^1.1.2",
-    "@phosphor/coreutils": "^1.3.0",
-    "@phosphor/disposable": "^1.1.2",
-    "react-inspector": "^2.3.0"
+    "@jupyterlab/application": "^1.0.0-rc.0",
+    "@jupyterlab/apputils": "^1.0.0-rc.0",
+    "@jupyterlab/mainmenu": "^1.0.0-rc.0",
+    "@jupyterlab/notebook": "^1.0.0-rc.0",
+    "@phosphor/algorithm": "^1.1.3",
+    "@phosphor/coreutils": "^1.3.1",
+    "@phosphor/disposable": "^1.2.0",
+    "@phosphor/widgets": "^1.8.0",
+    "react-inspector": "^2.0.0"
   },
   "devDependencies": {
-    "@jupyterlab/notebook": "^0.19.2",
-    "@jupyterlab/services": "^3.2.1",
-    "@jupyterlab/mainmenu": "^0.8.1",
-    "@phosphor/commands": "^1.6.1",
+    "@jupyterlab/docregistry": "^1.0.0-rc.0",
+    "@jupyterlab/services": "^4.0.0-rc.0",
+    "@phosphor/commands": "^1.6.2",
+    "@phosphor/messaging": "^1.2.3",
     "rimraf": "^2.6.2",
-    "typescript": "~3.1.3"
+    "typescript": "~3.5.1"
   },
   "jupyterlab": {
     "extension": "lib/plugin"
