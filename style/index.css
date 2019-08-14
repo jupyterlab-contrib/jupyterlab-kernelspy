@@ -63,6 +63,10 @@ button.jp-kernelspy-threadcollapser {
   background-image: var(--jp-icon-json);
 }
 
+.jp-kernelspy-clearAll {
+  background-image: var(--jp-icon-close);
+}
+
 .jp-kernelspy-collapseIcon {
   background-image: var(--jp-image-caretright);
 }

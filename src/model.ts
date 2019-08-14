@@ -100,6 +100,7 @@ class KernelSpyModel extends VDomModel {
     this._messages = {};
     this._childLUT = {};
     this._roots = [];
+    this.stateChanged.emit(void 0);
   }
 
   get kernel() {
