@@ -236,16 +236,6 @@ export class KernelSpyView extends Widget {
     BoxLayout.setStretch(this._toolbar, 0);
     BoxLayout.setStretch(this._messagelog, 1);
 
-    this.clearAllButton = new ToolbarButton({
-      onClick: () => {
-        this._model.clear();
-      },
-      className: 'jp-kernelspy-clearAll',
-      iconClassName: 'jp-kernelspy-clearAll jp-Icon jp-Icon-16',
-      tooltip: 'Clear all threads',
-    });
-    this._toolbar.addItem('clear-all', this.clearAllButton);
-
     this.collapseAllButton = new ToolbarButton({
       onClick: () => {
         this._messagelog.collapseAll();
@@ -265,6 +255,16 @@ export class KernelSpyView extends Widget {
       tooltip: 'Expand all threads'
     });
     this._toolbar.addItem('expand-all', this.expandAllButton);
+
+    this.clearAllButton = new ToolbarButton({
+      onClick: () => {
+        this._model.clear();
+      },
+      className: 'jp-kernelspy-clearAll',
+      iconClassName: 'jp-kernelspy-clearAll jp-Icon jp-Icon-16',
+      tooltip: 'Clear all threads',
+    });
+    this._toolbar.addItem('clear-all', this.clearAllButton);
   }
 
   /**
