@@ -145,7 +145,7 @@ function addCommands(
         return;
       }
       const widget = new KernelSpyView(current.context.session.kernel! as Kernel.IKernel);
-      shell.add(widget, 'main');
+      shell.add(widget, 'main', { mode: 'split-right' });
       if (args['activate'] !== false) {
         shell.activateById(widget.id);
       }
