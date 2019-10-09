@@ -22,6 +22,11 @@ From JupyterLab 0.34 onwards, you can update the extension to the latest compati
 jupyter labextension update jupyterlab-kernelspy
 ```
 
+## Usage
+
+Once the extension is installed, it should add a button to your notebook toolbar (a yellow `{:}` icon).
+Click this button to open a log view for that notebook.
+
 
 ## Development
 
