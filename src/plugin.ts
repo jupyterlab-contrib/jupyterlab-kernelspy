@@ -21,24 +21,20 @@ import {
 } from '@jupyterlab/notebook';
 
 import {
-  Kernel
-} from '@jupyterlab/services';
-
-import {
   find
-} from '@phosphor/algorithm';
+} from '@lumino/algorithm';
 
 import {
   CommandRegistry
-} from '@phosphor/commands';
+} from '@lumino/commands';
 
 import {
   Token
-} from '@phosphor/coreutils';
+} from '@lumino/coreutils';
 
 import {
   IDisposable, DisposableDelegate
-} from '@phosphor/disposable';
+} from '@lumino/disposable';
 
 import {
   KernelSpyView
@@ -130,7 +126,7 @@ function addCommands(
   function hasKernel(): boolean {
     return (
       tracker.currentWidget !== null &&
-      tracker.currentWidget.context.session.kernel !== null
+      (tracker.currentWidget.context.sessionContext?.session?.kernel ?? null) !== null
     );
   }
 
@@ -144,7 +140,7 @@ function addCommands(
       if (!current) {
         return;
       }
-      const widget = new KernelSpyView(current.context.session.kernel! as Kernel.IKernel);
+      const widget = new KernelSpyView(current.context.sessionContext!.session!.kernel!);
       shell.add(widget, 'main', { mode: 'split-right' });
       if (args['activate'] !== false) {
         shell.activateById(widget.id);
@@ -193,15 +189,15 @@ const extension: JupyterFrontEndPlugin<IKernelSpyExtension> = {
 
     let prevWidget: NotebookPanel | null = tracker.currentWidget;
     if (prevWidget) {
-      prevWidget.context.session.kernelChanged.connect(refreshNewCommand);
+      prevWidget.context.sessionContext.kernelChanged.connect(refreshNewCommand);
     }
     tracker.currentChanged.connect((tracker) => {
       if (prevWidget) {
-        prevWidget.context.session.kernelChanged.disconnect(refreshNewCommand);
+        prevWidget.context.sessionContext.kernelChanged.disconnect(refreshNewCommand);
       }
       prevWidget = tracker.currentWidget;
       if (prevWidget) {
-        prevWidget.context.session.kernelChanged.connect(refreshNewCommand);
+        prevWidget.context.sessionContext.kernelChanged.connect(refreshNewCommand);
       }
     });
     return extension;

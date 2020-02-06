@@ -11,20 +11,24 @@ import {
 } from '@jupyterlab/services';
 
 import {
+  caretDownIcon, caretRightIcon, closeIcon
+} from '@jupyterlab/ui-components';
+
+import {
   each
-} from '@phosphor/algorithm';
+} from '@lumino/algorithm';
 
 import {
   JSONValue
-} from '@phosphor/coreutils';
+} from '@lumino/coreutils';
 
 import {
-  Message as PhosphorMessage
-} from '@phosphor/messaging';
+  Message as luminoMessage
+} from '@lumino/messaging';
 
 import {
   Widget, BoxLayout
-} from '@phosphor/widgets';
+} from '@lumino/widgets';
 
 import {
   ObjectInspector, ObjectLabel
@@ -97,6 +101,11 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
   const msgId = msg.header.msg_id;
   const threadStateClass = props.collapsed ?
     'jp-mod-collapsed' : '';
+  const collapserIcon = props.hasChildren
+    ? props.collapsed
+      ? caretRightIcon
+      : caretDownIcon
+    : null;
   const hasChildrenClass = props.hasChildren ?
     'jp-mod-children' : '';
   const tabIndex = props.hasChildren ? 0 : -1;
@@ -113,6 +122,7 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
           }
           tabIndex={tabIndex}
         >
+          {collapserIcon && <collapserIcon.react className={'jp-Icon jp-Icon-16'} /> }
         </button>
         <span className='jp-kernelspy-threadlabel'>
           {msg.channel}.{msg.header.msg_type}
@@ -141,8 +151,7 @@ namespace Message {
  */
 export class MessageLogView extends VDomRenderer<KernelSpyModel> {
   constructor(model: KernelSpyModel) {
-    super();
-    this.model = model;
+    super(model);
     this.id = `kernelspy-messagelog-${model.kernel.id}`;
     this.addClass('jp-kernelspy-messagelog');
   }
@@ -214,7 +223,7 @@ export class MessageLogView extends VDomRenderer<KernelSpyModel> {
  * The main view for the kernel spy.
  */
 export class KernelSpyView extends Widget {
-  constructor(kernel: Kernel.IKernel) {
+  constructor(kernel: Kernel.IKernelConnection) {
     super();
     this._model = new KernelSpyModel(kernel);
     this.addClass('jp-kernelspy-view');
@@ -241,7 +250,8 @@ export class KernelSpyView extends Widget {
         this._messagelog.collapseAll();
       },
       className: 'jp-kernelspy-collapseAll',
-      iconClassName: 'jp-kernelspy-collapseIcon jp-Icon jp-Icon-16',
+      iconClass: 'jp-kernelspy-collapseIcon',
+      icon: caretRightIcon,
       tooltip: 'Collapse all threads',
     });
     this._toolbar.addItem('collapse-all', this.collapseAllButton);
@@ -251,7 +261,8 @@ export class KernelSpyView extends Widget {
         this._messagelog.expandAll();
       },
       className: 'jp-kernelspy-expandAll',
-      iconClassName: 'jp-kernelspy-expandIcon jp-Icon jp-Icon-16',
+      iconClass: 'jp-kernelspy-expandIcon',
+      icon: caretDownIcon,
       tooltip: 'Expand all threads'
     });
     this._toolbar.addItem('expand-all', this.expandAllButton);
@@ -261,7 +272,8 @@ export class KernelSpyView extends Widget {
         this._model.clear();
       },
       className: 'jp-kernelspy-clearAll',
-      iconClassName: 'jp-kernelspy-clearAll jp-Icon jp-Icon-16',
+      iconClass: 'jp-kernelspy-clearAll',
+      icon: closeIcon,
       tooltip: 'Clear all threads',
     });
     this._toolbar.addItem('clear-all', this.clearAllButton);
@@ -270,7 +282,7 @@ export class KernelSpyView extends Widget {
   /**
    * Handle `'activate-request'` messages.
    */
-  protected onActivateRequest(msg: PhosphorMessage): void {
+  protected onActivateRequest(msg: luminoMessage): void {
     if (!this.node.contains(document.activeElement)) {
       this.collapseAllButton.node.focus();
     }
