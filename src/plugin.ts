@@ -145,6 +145,9 @@ function addCommands(
       if (args['activate'] !== false) {
         shell.activateById(widget.id);
       }
+      current.context.sessionContext.kernelChanged.connect((sender, args) => {
+        widget.model.kernel = args.newValue;
+      });
     }
   });
 

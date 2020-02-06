@@ -19,7 +19,7 @@ import {
 } from '@lumino/algorithm';
 
 import {
-  JSONValue
+  JSONValue, UUID
 } from '@lumino/coreutils';
 
 import {
@@ -152,7 +152,7 @@ namespace Message {
 export class MessageLogView extends VDomRenderer<KernelSpyModel> {
   constructor(model: KernelSpyModel) {
     super(model);
-    this.id = `kernelspy-messagelog-${model.kernel.id}`;
+    this.id = `kernelspy-messagelog-${UUID.uuid4()}`;
     this.addClass('jp-kernelspy-messagelog');
   }
 
@@ -227,7 +227,7 @@ export class KernelSpyView extends Widget {
     super();
     this._model = new KernelSpyModel(kernel);
     this.addClass('jp-kernelspy-view');
-    this.id = `kernelspy-${kernel.id}`;
+    this.id = `kernelspy-${UUID.uuid4()}`;
     this.title.label = 'Kernel spy';
     this.title.closable = true;
     this.title.iconClass = 'jp-kernelspyIcon';
@@ -250,7 +250,6 @@ export class KernelSpyView extends Widget {
         this._messagelog.collapseAll();
       },
       className: 'jp-kernelspy-collapseAll',
-      iconClass: 'jp-kernelspy-collapseIcon',
       icon: caretRightIcon,
       tooltip: 'Collapse all threads',
     });
@@ -261,7 +260,6 @@ export class KernelSpyView extends Widget {
         this._messagelog.expandAll();
       },
       className: 'jp-kernelspy-expandAll',
-      iconClass: 'jp-kernelspy-expandIcon',
       icon: caretDownIcon,
       tooltip: 'Expand all threads'
     });
@@ -272,7 +270,6 @@ export class KernelSpyView extends Widget {
         this._model.clear();
       },
       className: 'jp-kernelspy-clearAll',
-      iconClass: 'jp-kernelspy-clearAll',
       icon: closeIcon,
       tooltip: 'Clear all threads',
     });

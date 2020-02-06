@@ -47,32 +47,8 @@ button.jp-kernelspy-threadcollapser {
   border: none;
 }
 
-.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children {
-  background-image: var(--jp-image-caretdown);
-  background-repeat: no-repeat;
-  background-position-y: center;
-  vertical-align: middle;
-  height: 1em;
-}
-
-.jp-kernelspy-view .jp-kernelspy-threadcollapser.jp-mod-children.jp-mod-collapsed {
-  background-image: var(--jp-image-caretright);
-}
-
 .jp-kernelspyIcon {
   background-image: var(--jp-icon-json);
-}
-
-.jp-kernelspy-clearAll {
-  background-image: var(--jp-icon-close);
-}
-
-.jp-kernelspy-collapseIcon {
-  background-image: var(--jp-image-caretright);
-}
-
-.jp-kernelspy-expandIcon {
-  background-image: var(--jp-image-caretdown);
 }
 
 .jp-kernelspy-nbtoolbarbutton .jp-ToolbarButtonComponent-label {
