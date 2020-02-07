@@ -11,7 +11,7 @@ import {
 } from '@jupyterlab/services';
 
 import {
-  caretDownIcon, caretRightIcon, closeIcon
+  caretDownIcon, caretRightIcon, closeIcon, jsonIcon
 } from '@jupyterlab/ui-components';
 
 import {
@@ -230,7 +230,7 @@ export class KernelSpyView extends Widget {
     this.id = `kernelspy-${UUID.uuid4()}`;
     this.title.label = 'Kernel spy';
     this.title.closable = true;
-    this.title.iconClass = 'jp-kernelspyIcon';
+    this.title.iconRenderer = jsonIcon;
 
     let layout = this.layout = new BoxLayout();
 
