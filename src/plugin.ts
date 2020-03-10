@@ -5,7 +5,7 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  ICommandPalette, CommandToolbarButton, WidgetTracker
+  ICommandPalette, CommandToolbarButton, MainAreaWidget, WidgetTracker
 } from '@jupyterlab/apputils';
 
 import {
@@ -125,7 +125,7 @@ class KernelSpyExtension implements IKernelSpyExtension {
 function addCommands(
     app: JupyterFrontEnd,
     tracker: INotebookTracker,
-    spyTracker: WidgetTracker<KernelSpyView>,
+    spyTracker: WidgetTracker<MainAreaWidget<KernelSpyView>>,
     palette: ICommandPalette | null,
     menu: IMainMenu | null
     ): void {
@@ -162,24 +162,26 @@ function addCommands(
       notebook.title.changed.connect(() => {
         widget.title.label = `Kernel spy: ${notebook!.title.label}`;
       });
+
+      const outer = new MainAreaWidget({content: widget});
       spyProp.set(widget, notebook.context.path);
       notebook.context.pathChanged.connect((_, path) => {
         spyProp.set(widget, path);
-        spyTracker.save(widget);
+        spyTracker.save(outer);
       });
-      spyTracker.add(widget);
+      spyTracker.add(outer);
       notebook.context.sessionContext.kernelChanged.connect((_, args) => {
         widget.model.kernel = args.newValue;
       });
 
-      shell.add(widget, 'main', { mode: 'split-right' });
+      shell.add(outer, 'main', { mode: 'split-right' });
 
       if (args['activate'] !== false) {
-        shell.activateById(widget.id);
+        shell.activateById(outer.id);
       }
       notebook.disposed.connect(() => {
-        widget.close();
-      })
+        outer.close();
+      });
     }
   });
 
@@ -215,17 +217,17 @@ const extension: JupyterFrontEndPlugin<IKernelSpyExtension> = {
     docRegistry.addWidgetExtension('Notebook', extension);
 
     // Recreate views from layout restorer
-    const spyTracker = new WidgetTracker<KernelSpyView>({
+    const spyTracker = new WidgetTracker<MainAreaWidget<KernelSpyView>>({
       namespace: 'kernelspy'
     });
     if (restorer) {
       void restorer.restore(spyTracker, {
         command: CommandIDs.newSpy,
-        args: view => ({
-          path: spyProp.get(view),
+        args: widget => ({
+          path: spyProp.get(widget.content),
           activate: false,
         }),
-        name: view => spyProp.get(view),
+        name: widget => spyProp.get(widget.content),
         when: tracker.restored
       });
     }
