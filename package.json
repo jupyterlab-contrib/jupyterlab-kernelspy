@@ -1,6 +1,6 @@
 {
   "name": "jupyterlab-kernelspy",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A Jupyter Lab extension for inspecting messages to/from a kernel",
   "keywords": [
     "jupyter",
