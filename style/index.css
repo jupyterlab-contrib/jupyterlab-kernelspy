@@ -54,3 +54,11 @@ button.jp-kernelspy-threadcollapser {
 .jp-kernelspy-nbtoolbarbutton .jp-ToolbarButtonComponent-label {
   display: none;
 }
+
+.kspy-collapser-icon {
+  padding: 0;
+}
+
+.kspy-collapser-icon svg {
+  vertical-align: middle;
+}

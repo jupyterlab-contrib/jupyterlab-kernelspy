@@ -122,7 +122,7 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
           }
           tabIndex={tabIndex}
         >
-          {collapserIcon && <collapserIcon.react className={'jp-Icon jp-Icon-16'} /> }
+          {collapserIcon && <collapserIcon.react className={'kspy-collapser-icon'} /> }
         </button>
         <span className='jp-kernelspy-threadlabel'>
           {msg.channel}.{msg.header.msg_type}
