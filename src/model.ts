@@ -2,7 +2,7 @@
 
 import {
   IIterator
-} from '@phosphor/algorithm';
+} from '@lumino/algorithm';
 
 import {
   VDomModel
@@ -89,10 +89,9 @@ namespace ThreadIterator {
  */
 export
 class KernelSpyModel extends VDomModel {
-  constructor(kernel: Kernel.IKernel) {
+  constructor(kernel: Kernel.IKernelConnection) {
     super();
-    this._kernel = kernel;
-    this._kernel.anyMessage.connect(this.onMessage, this);
+    this.kernel = kernel;
   }
 
   clear() {
@@ -105,6 +104,16 @@ class KernelSpyModel extends VDomModel {
 
   get kernel() {
     return this._kernel;
+  }
+
+  set kernel(value: Kernel.IKernelConnection | null) {
+    if (this._kernel) {
+      this._kernel.anyMessage.disconnect(this.onMessage, this);
+    }
+    this._kernel = value;
+    if (this._kernel) {
+      this._kernel.anyMessage.connect(this.onMessage, this);
+    }
   }
 
   get log(): ReadonlyArray<Kernel.IAnyMessageArgs> {
@@ -151,7 +160,7 @@ class KernelSpyModel extends VDomModel {
     return thread;
   }
 
-  protected onMessage(sender: Kernel.IKernel, args: Kernel.IAnyMessageArgs) {
+  protected onMessage(sender: Kernel.IKernelConnection, args: Kernel.IAnyMessageArgs) {
     const {msg} = args;
     this._log.push(args);
     this._messages[msg.header.msg_id] = args;
@@ -175,7 +184,7 @@ class KernelSpyModel extends VDomModel {
 
   private _log: Kernel.IAnyMessageArgs[] = [];
 
-  private _kernel: Kernel.IKernel;
+  private _kernel: Kernel.IKernelConnection | null;
 
   private _messages: {[key: string]: Kernel.IAnyMessageArgs} = {};
   private _childLUT: {[key: string]: string[]} = {};

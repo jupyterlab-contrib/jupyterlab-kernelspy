@@ -5,3 +5,4 @@ node_modules/
 .ipynb_checkpoints
 yarn.lock
 package.lock
+package-lock.json
