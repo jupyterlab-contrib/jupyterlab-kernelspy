@@ -89,9 +89,9 @@ namespace ThreadIterator {
  */
 export
 class KernelSpyModel extends VDomModel {
-  constructor(kernel: Kernel.IKernelConnection) {
+  constructor(kernel?: Kernel.IKernelConnection | null) {
     super();
-    this.kernel = kernel;
+    this.kernel = kernel ?? null;
   }
 
   clear() {
