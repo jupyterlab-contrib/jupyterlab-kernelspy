@@ -31,7 +31,7 @@ import {
 } from '@lumino/widgets';
 
 import {
-  ObjectInspector, ObjectLabel
+  ObjectInspector, ObjectLabel, InspectorNodeParams
 } from 'react-inspector';
 
 import {
@@ -70,15 +70,7 @@ const theme = {
   TREENODE_PADDING_LEFT: 12,
 };
 
-interface IRendererArgs {
-  depth: number;
-  name: string;
-  data: JSONValue;
-  isNonenumerable: boolean;
-  expanded: boolean;
-}
-
-function msgNodeRenderer(args: IRendererArgs) {
+function msgNodeRenderer(args: InspectorNodeParams) {
   const {name, depth, isNonenumerable, data} = args;
   if (depth !== 0) {
     return <ObjectLabel
@@ -88,7 +80,7 @@ function msgNodeRenderer(args: IRendererArgs) {
       isNonenumerable={isNonenumerable}
     />;
   }
-  const msg = data as any as KernelMessage.IMessage;
+  const msg = data as unknown as KernelMessage.IMessage;
   return (
     <span key={`node-label`}>
       {msg.header.msg_id}
@@ -130,7 +122,7 @@ function Message(props: Message.IProperties): React.ReactElement<any>[] {
       </div>
     </div>,
     <div key={`message-${msgId}`} className='jp-kernelspy-message'>
-      <ObjectInspector data={msg} theme={theme} nodeRenderer={msgNodeRenderer}/>
+      <ObjectInspector data={msg} theme={theme as any} nodeRenderer={msgNodeRenderer}/>
     </div>
   ];
 }

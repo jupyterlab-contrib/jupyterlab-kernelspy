@@ -9,7 +9,6 @@
     "target": "ES6",
     "outDir": "./lib",
     "lib": ["es6", "dom"],
-    "types": [],
     "strictNullChecks": true,
     "jsx": "react",
     "skipLibCheck": true,
