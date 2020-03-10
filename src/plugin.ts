@@ -1,11 +1,11 @@
 'use strict';
 
 import {
-  JupyterFrontEndPlugin, JupyterFrontEnd
+  JupyterFrontEndPlugin, JupyterFrontEnd, ILayoutRestorer
 } from '@jupyterlab/application';
 
 import {
-  ICommandPalette, CommandToolbarButton
+  ICommandPalette, CommandToolbarButton, WidgetTracker
 } from '@jupyterlab/apputils';
 
 import {
@@ -37,6 +37,10 @@ import {
 } from '@lumino/disposable';
 
 import {
+  AttachedProperty
+} from '@lumino/properties';
+
+import {
   KernelSpyView
 } from './widget';
 
@@ -60,6 +64,12 @@ const IKernelSpyExtension = new Token<IKernelSpyExtension>('jupyter.extensions.k
 
 export
 type IKernelSpyExtension = DocumentRegistry.IWidgetExtension<NotebookPanel, INotebookModel>;
+
+
+const spyProp = new AttachedProperty<KernelSpyView, string>({
+  create: () => '',
+  name: 'SpyTarget'
+});
 
 
 export
@@ -115,8 +125,9 @@ class KernelSpyExtension implements IKernelSpyExtension {
 function addCommands(
     app: JupyterFrontEnd,
     tracker: INotebookTracker,
-    palette: ICommandPalette,
-    menu: IMainMenu
+    spyTracker: WidgetTracker<KernelSpyView>,
+    palette: ICommandPalette | null,
+    menu: IMainMenu | null
     ): void {
   const { commands, shell } = app;
 
@@ -136,38 +147,51 @@ function addCommands(
     iconClass: 'jp-Icon jp-Icon-16 jp-kernelspyIcon',
     isEnabled: hasKernel,
     execute: (args) => {
-      let current = tracker.currentWidget;
-      if (!current) {
+      let notebook: NotebookPanel | null;
+      if (args.path) {
+        notebook = tracker.find(nb => nb.context.path === args.path) ?? null;
+      } else {
+        notebook = tracker.currentWidget;
+      }
+      if (!notebook) {
         return;
       }
-      const widget = new KernelSpyView(current.context.sessionContext!.session!.kernel!);
-      widget.title.label = `Kernel spy: ${current.title.label}`;
-      current.title.changed.connect(() => {
-        widget.title.label = `Kernel spy: ${current!.title.label}`;
+      const widget = new KernelSpyView(notebook.context.sessionContext?.session?.kernel);
+
+      widget.title.label = `Kernel spy: ${notebook.title.label}`;
+      notebook.title.changed.connect(() => {
+        widget.title.label = `Kernel spy: ${notebook!.title.label}`;
       });
+      spyProp.set(widget, notebook.context.path);
+      notebook.context.pathChanged.connect((_, path) => {
+        spyProp.set(widget, path);
+        spyTracker.save(widget);
+      });
+      spyTracker.add(widget);
+      notebook.context.sessionContext.kernelChanged.connect((_, args) => {
+        widget.model.kernel = args.newValue;
+      });
+
       shell.add(widget, 'main', { mode: 'split-right' });
+
       if (args['activate'] !== false) {
         shell.activateById(widget.id);
       }
-      current.context.sessionContext.kernelChanged.connect((sender, args) => {
-        widget.model.kernel = args.newValue;
-      });
-      current.disposed.connect(() => {
+      notebook.disposed.connect(() => {
         widget.close();
       })
     }
   });
 
-  palette.addItem({
+  palette?.addItem({
     command: CommandIDs.newSpy,
     category: 'Kernel',
   });
 
-  menu.kernelMenu.addGroup([
+  menu?.kernelMenu.addGroup([
     { command: CommandIDs.newSpy },
   ]);
 }
-
 
 
 /**
@@ -176,21 +200,37 @@ function addCommands(
 const extension: JupyterFrontEndPlugin<IKernelSpyExtension> = {
   id: 'jupyterlab-kernelspy',
   autoStart: true,
-  requires: [INotebookTracker, ICommandPalette, IMainMenu],
+  requires: [INotebookTracker],
+  optional: [ICommandPalette, IMainMenu, ILayoutRestorer],
   provides: IKernelSpyExtension,
-  activate: (
+  activate: async (
       app: JupyterFrontEnd,
       tracker: INotebookTracker,
-      palette: ICommandPalette,
-      mainMenu: IMainMenu,
+      palette: ICommandPalette | null,
+      mainMenu: IMainMenu | null,
+      restorer: ILayoutRestorer | null,
       ) => {
     let {commands, docRegistry} = app;
     let extension = new KernelSpyExtension(commands);
     docRegistry.addWidgetExtension('Notebook', extension);
 
-    // TODO: Recreate views from layout restorer
+    // Recreate views from layout restorer
+    const spyTracker = new WidgetTracker<KernelSpyView>({
+      namespace: 'kernelspy'
+    });
+    if (restorer) {
+      void restorer.restore(spyTracker, {
+        command: CommandIDs.newSpy,
+        args: view => ({
+          path: spyProp.get(view),
+          activate: false,
+        }),
+        name: view => spyProp.get(view),
+        when: tracker.restored
+      });
+    }
 
-    addCommands(app, tracker, palette, mainMenu);
+    addCommands(app, tracker, spyTracker, palette, mainMenu);
     function refreshNewCommand() {
       commands.notifyCommandChanged(CommandIDs.newSpy);
     }

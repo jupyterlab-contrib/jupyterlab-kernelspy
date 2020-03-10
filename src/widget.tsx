@@ -19,7 +19,7 @@ import {
 } from '@lumino/algorithm';
 
 import {
-  JSONValue, UUID
+  UUID
 } from '@lumino/coreutils';
 
 import {
@@ -215,7 +215,7 @@ export class MessageLogView extends VDomRenderer<KernelSpyModel> {
  * The main view for the kernel spy.
  */
 export class KernelSpyView extends Widget {
-  constructor(kernel: Kernel.IKernelConnection) {
+  constructor(kernel?: Kernel.IKernelConnection | null) {
     super();
     this._model = new KernelSpyModel(kernel);
     this.addClass('jp-kernelspy-view');
