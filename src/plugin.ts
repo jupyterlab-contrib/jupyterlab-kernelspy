@@ -141,6 +141,10 @@ function addCommands(
         return;
       }
       const widget = new KernelSpyView(current.context.sessionContext!.session!.kernel!);
+      widget.title.label = `Kernel spy: ${current.title.label}`;
+      current.title.changed.connect(() => {
+        widget.title.label = `Kernel spy: ${current!.title.label}`;
+      });
       shell.add(widget, 'main', { mode: 'split-right' });
       if (args['activate'] !== false) {
         shell.activateById(widget.id);
@@ -148,6 +152,9 @@ function addCommands(
       current.context.sessionContext.kernelChanged.connect((sender, args) => {
         widget.model.kernel = args.newValue;
       });
+      current.disposed.connect(() => {
+        widget.close();
+      })
     }
   });
 
