@@ -27,7 +27,7 @@ jobs:
       run: |
         pip install .
 
-        echo "         jupyterlab-kernelspy v2.2.0 enabled OK" | grep -ie "jupyterlab-kernelspy.*enabled.*ok" -
+        python -c "'print('foo\nbar\n         jupyterlab-kernelspy v2.2.0 \033[32menabled\033[0m \033[32mOK\033[0m ')" | grep -ie "jupyterlab-kernelspy.*enabled.*ok" -
 
         jupyter labextension list | grep -ie "jupyterlab-kernelspy.*enabled.*ok" -
 
