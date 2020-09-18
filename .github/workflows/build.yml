@@ -27,6 +27,8 @@ jobs:
       run: |
         pip install .
 
+        echo "         jupyterlab-kernelspy v2.2.0 enabled OK" | grep -ie "jupyterlab-kernelspy.*enabled.*ok" -
+
         jupyter labextension list | grep -ie "jupyterlab-kernelspy.*enabled.*ok" -
 
         python -m jupyterlab.browser_check
