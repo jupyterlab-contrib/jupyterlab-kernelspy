@@ -1,5 +1,3 @@
-'use strict';
-
 import {
   IIterator
 } from '@lumino/algorithm';
@@ -184,7 +182,7 @@ class KernelSpyModel extends VDomModel {
 
   private _log: Kernel.IAnyMessageArgs[] = [];
 
-  private _kernel: Kernel.IKernelConnection | null;
+  private _kernel: Kernel.IKernelConnection | null = null;
 
   private _messages: {[key: string]: Kernel.IAnyMessageArgs} = {};
   private _childLUT: {[key: string]: string[]} = {};
