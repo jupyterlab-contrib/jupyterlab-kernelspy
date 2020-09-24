@@ -1,5 +1,7 @@
 # jupyterlab-kernelspy
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vidartf/jupyterlab-kernelspy/master?urlpath=%2Flab)
+
 A JupyterLab extension for inspecting messages to/from a kernel.
 
 ![screenshot](screenshot.png)
