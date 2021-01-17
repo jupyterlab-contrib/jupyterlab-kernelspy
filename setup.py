@@ -1,77 +1,80 @@
 """
-jupyterlab-kernelspy setup
+jupyterlab_kernelspy setup
 """
 import json
 import os
 
 from jupyter_packaging import (
-    create_cmdclass, install_npm, ensure_targets,
+    create_cmdclass,
+    install_npm,
+    ensure_targets,
     combine_commands,
+    skip_if_exists,
 )
 import setuptools
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 # The name of the project
-name="jupyterlab-kernelspy"
+name = "jupyterlab_kernelspy"
 
 # Get our version
-with open(os.path.join(HERE, "package.json")) as pf:
-    pdata = json.load(pf)
-version = pdata['version']
+with open(os.path.join(HERE, "package.json")) as f:
+    version = json.load(f)["version"]
 
-lab_path = os.path.join(HERE, name, "static")
+lab_path = os.path.join(HERE, name, "labextension")
 
 # Representative files that should exist after a successful build
 jstargets = [
-    os.path.join(HERE, "lib", "plugin.js"),
-    os.path.join(HERE, name, "static", "package.json"),
+    os.path.join(lab_path, "package.json"),
 ]
 
-package_data_spec = {
-    name: [
-        "*"
-    ]
-}
+package_data_spec = {name: ["*"]}
 
 labext_name = "jupyterlab-kernelspy"
 
 data_files_spec = [
-    ("share/jupyter/labextensions/%s" % labext_name, lab_path, "*.*"),
+    ("share/jupyter/labextensions/%s" % labext_name, lab_path, "**"),
+    ("share/jupyter/labextensions/%s" % labext_name, HERE, "install.json"),
 ]
 
-cmdclass = create_cmdclass("jsdeps",
-    package_data_spec=package_data_spec,
-    data_files_spec=data_files_spec
+cmdclass = create_cmdclass(
+    "jsdeps", package_data_spec=package_data_spec, data_files_spec=data_files_spec
 )
 
-cmdclass["jsdeps"] = combine_commands(
-    install_npm(HERE, build_cmd="build", npm=["jlpm"]),
+js_command = combine_commands(
+    install_npm(HERE, build_cmd="build:prod", npm=["jlpm"]),
     ensure_targets(jstargets),
 )
+
+is_repo = os.path.exists(os.path.join(HERE, ".git"))
+if is_repo:
+    cmdclass["jsdeps"] = js_command
+else:
+    cmdclass["jsdeps"] = skip_if_exists(jstargets, js_command)
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup_args = dict(
-    name=name,
+    name=name.replace("_", "-"),
     version=version,
-    url="https://github.com/vidartf/jupyterlab-kernelspy.git",
+    url="https://github.com/jupyterlab-contrib/jupyterlab-kernelspy.git",
     author="Vidar Tonaas Fauske",
     description="A Jupyter Lab extension for inspecting messages to/from a kernel",
     long_description=long_description,
     long_description_content_type="text/markdown",
     cmdclass=cmdclass,
-    packages=[],  # do not dist package, only use the package for loca dev
+    packages=setuptools.find_packages(),
     install_requires=[
-        "jupyterlab~=3.0.0b6",
+        "jupyterlab>=3.0.0rc13,==3.*",
     ],
     zip_safe=False,
     include_package_data=True,
     python_requires=">=3.6",
     license="BSD-3-Clause",
     platforms="Linux, Mac OS X, Windows",
-    keywords=["Jupyter", "JupyterLab"],
+    keywords=["Jupyter", "JupyterLab", "JupyterLab3"],
     classifiers=[
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python",

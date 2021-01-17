@@ -1,14 +1,15 @@
 # jupyterlab-kernelspy
 
-A JupyterLab extension for inspecting messages to/from a kernel.
+[![Github Actions Status](https://github.com/jupyterlab-contrib/jupyterlab-kernelspy/workflows/Build/badge.svg)](https://github.com/jupyterlab-contrib/jupyterlab-kernelspy/actions?query=workflow%3ABuild)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jupyterlab-contrib/jupyterlab-kernelspy/master?urlpath=lab)
 
-![screenshot](screenshot.png)
+A Jupyter Lab extension for inspecting messages to/from a kernel
 
-## Prerequisites
+## Requirements
 
-* JupyterLab
+- JupyterLab
 
-## Installation
+## Install
 
 ```bash
 pip install jupyterlab-kernelspy
@@ -32,7 +33,7 @@ Click this button to open a log view for that notebook.
 
 ## Contributing
 
-### Development
+### Development install
 
 Note: You will need NodeJS to build the extension package.
 
@@ -42,8 +43,8 @@ The `jlpm` command is JupyterLab's pinned version of
 
 ```bash
 # Clone the repo to your local environment
-# Change directory to the jupyterlab-kernelspy directory (python package dir)
-# Install the package in development mode
+# Change directory to the jupyterlab-kernelspy directory
+# Install package in development mode
 pip install -e .
 # Link your development version of the extension with JupyterLab
 jupyter labextension develop . --overwrite
@@ -62,9 +63,14 @@ jupyter lab
 
 With the watch command running, every saved change will immediately be built locally and available in your running JupyterLab. Refresh JupyterLab to load the change in your browser (you may need to wait several seconds for the extension to be rebuilt).
 
+By default, the `jlpm run build` command generates the source maps for this extension to make it easier to debug using the browser dev tools. To also generate source maps for the JupyterLab core extensions, you can run the following command:
+
+```bash
+jupyter lab build --minimize=False
+```
+
 ### Uninstall
 
 ```bash
 pip uninstall jupyterlab-kernelspy
-jupyter labextension uninstall jupyterlab-kernelspy
 ```
