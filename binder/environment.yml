@@ -17,5 +17,6 @@ dependencies:
   - nodejs >=14,<15
   - pip
   - wheel
-  # additional packages for demos
-  # - ipywidgets
+  # Fix binder
+  - parso >=0.8.0,<0.9.0
+  - jupyter_telemetry >=0.1.0
