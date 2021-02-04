@@ -37,7 +37,6 @@
     "eslint": "eslint . --ext .ts,.tsx --fix",
     "eslint:check": "eslint . --ext .ts,.tsx",
     "install:extension": "jupyter labextension develop --overwrite .",
-    "prepack": "jlpm run clean && jlpm run build",
     "prepare": "jlpm run clean && jlpm run build:prod",
     "update:all": "update-dependency --minimal --regex .*",
     "update:lab": "update-dependency --minimal --regex ^@jupyterlab/",
