@@ -13,3 +13,7 @@ updates:
     commit-message:
       prefix: "npm"
       include: "scope"
+    allow:  # Only consider run time dependencies:
+      - dependency-type: "production"
+    ignore: # Don't update major and minor to keep compatibility with older jupyterlab
+      - update-types: ["version-update:semver-major", "version-update:semver-minor"]
