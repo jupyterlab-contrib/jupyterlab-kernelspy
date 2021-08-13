@@ -16,4 +16,5 @@ updates:
     allow:  # Only consider run time dependencies:
       - dependency-type: "production"
     ignore: # Don't update major and minor to keep compatibility with older jupyterlab
-      - update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: '*'
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
