@@ -619,10 +619,10 @@
     react-dom "^17.0.1"
     typestyle "^2.0.4"
 
-"@lumino/algorithm@^1.3.3", "@lumino/algorithm@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@lumino/algorithm/-/algorithm-1.6.1.tgz#d50a2cd793c390184914cc66f8b90b89c64c3b14"
-  integrity sha512-xrMb+O95RzafL182C5bAGflDrUy2ti7qp6yvDzvJVRuMaNGagJYQZ00x1h1KqXZfM3JjXam369FzzpKdzuuzOQ==
+"@lumino/algorithm@^1.3.3", "@lumino/algorithm@^1.6.1", "@lumino/algorithm@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@lumino/algorithm/-/algorithm-1.6.2.tgz#c68968d04857f7fbe9f4856ab3078aee7694868e"
+  integrity sha512-4QlhUduCKjoHqWjYRayDZvd5kgrj2EWm4ELFC1IIcQ8SuIUPCmyAIsIVx5l76lI3hUkmHvVl411s9qWLQuiX+A==
 
 "@lumino/application@^1.13.1":
   version "1.20.0"
@@ -659,12 +659,12 @@
   integrity sha512-OtC9zC20FUVJapAKfSbsXkGJZagaLPbBlaaLCL7eOXpS+eiZfLYHmLRUO9ewDEnZlReQygIXURjzGxojW5IvOQ==
 
 "@lumino/disposable@^1.4.3", "@lumino/disposable@^1.7.0", "@lumino/disposable@^1.7.1":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@lumino/disposable/-/disposable-1.7.1.tgz#866db40ffbec7a0d057dd0f7b0f85f13ecf7f202"
-  integrity sha512-TvSj19bcxbC5XRWUutVX8EKHjlwKr6AzRkYJYQa02AML2/exdYpNTb73U730saqIFl9LfjF6XysHsLWlI+lwqg==
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@lumino/disposable/-/disposable-1.7.2.tgz#86c30bee7335bc624881195501de58a074195b34"
+  integrity sha512-3+1sVpO0X4Ymh/VcHgy/0aM6VrWecSPDDtJnyEzrKJNvVj582FnD3Ftej5hx5yc4DGjOJ4U7Ue7zkIKc+vOxTw==
   dependencies:
-    "@lumino/algorithm" "^1.6.1"
-    "@lumino/signaling" "^1.7.1"
+    "@lumino/algorithm" "^1.6.2"
+    "@lumino/signaling" "^1.7.2"
 
 "@lumino/domutils@^1.2.3", "@lumino/domutils@^1.5.1":
   version "1.5.1"
@@ -706,12 +706,12 @@
   resolved "https://registry.yarnpkg.com/@lumino/properties/-/properties-1.5.1.tgz#3044b8d620f5a53c40d160320e7fe9226d13bf5c"
   integrity sha512-Qn8+SeIiwNjbv2cqd1+3ZiY9pC9GPpKUJFgN6VA5oqWLjk5FxqFVpELV4597fg8Cb5tpYTdDgllMTxXm5jWSPw==
 
-"@lumino/signaling@^1.4.3", "@lumino/signaling@^1.7.0", "@lumino/signaling@^1.7.1":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@lumino/signaling/-/signaling-1.7.1.tgz#48f9c042e42ab61fe9e9db0761bca773a1bafabc"
-  integrity sha512-8gWeMLtMsP2mHHoUV1UTtl6zmxmmbccukuOzkY2wM9rJJ4lVgK8NnEjM2olm7NyrqvFAyefLkGJMe1i6zRBeqQ==
+"@lumino/signaling@^1.4.3", "@lumino/signaling@^1.7.0", "@lumino/signaling@^1.7.1", "@lumino/signaling@^1.7.2":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@lumino/signaling/-/signaling-1.7.2.tgz#76eec02b6edf333b804b232fdd6cc5aff669076a"
+  integrity sha512-HnEDrvLPE3HiLzZuXMU2uULp5f15QsPl6pwOpl8q9D/dhKVytPH3j04J+pl4SO4NlbtTktIWqVvSDWl2WbMWZg==
   dependencies:
-    "@lumino/algorithm" "^1.6.1"
+    "@lumino/algorithm" "^1.6.2"
 
 "@lumino/virtualdom@^1.11.1", "@lumino/virtualdom@^1.8.0":
   version "1.11.1"
