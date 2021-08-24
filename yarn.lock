@@ -654,9 +654,9 @@
     "@lumino/virtualdom" "^1.11.1"
 
 "@lumino/coreutils@^1.5.3", "@lumino/coreutils@^1.8.0", "@lumino/coreutils@^1.8.1":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@lumino/coreutils/-/coreutils-1.8.1.tgz#005f3e7976746470e2f14ed672e4fd7dca2ffa32"
-  integrity sha512-OtC9zC20FUVJapAKfSbsXkGJZagaLPbBlaaLCL7eOXpS+eiZfLYHmLRUO9ewDEnZlReQygIXURjzGxojW5IvOQ==
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@lumino/coreutils/-/coreutils-1.8.2.tgz#e303a3b12a319f0f304b835269ca85319346d219"
+  integrity sha512-IPlQEU9yJ/ysaEYiTqb25xKnKgAANiRy5huC2fPWuJtNfhjl8fyWsj8knTJC6XmI09NzhP8ZAyMAZjTFPYnyaw==
 
 "@lumino/disposable@^1.4.3", "@lumino/disposable@^1.7.0", "@lumino/disposable@^1.7.1":
   version "1.7.1"
