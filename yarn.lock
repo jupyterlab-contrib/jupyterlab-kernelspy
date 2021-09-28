@@ -293,10 +293,10 @@
     react "^17.0.1"
     y-codemirror "^2.1.1"
 
-"@jupyterlab/coreutils@^5.0.7", "@jupyterlab/coreutils@^5.1.12", "@jupyterlab/coreutils@^5.1.5":
-  version "5.1.12"
-  resolved "https://registry.yarnpkg.com/@jupyterlab/coreutils/-/coreutils-5.1.12.tgz#eb08aa4bf68912b6188d16bce402e737dedccd84"
-  integrity sha512-gZHFekV8XdP4naH+5q7l6v8TVsUgJk16OpgLLCdOOGuwFOW7zduBe1td6Z820brsmnqb1kg2jBcxl0RwVw7tLQ==
+"@jupyterlab/coreutils@^5.0.7", "@jupyterlab/coreutils@^5.1.12", "@jupyterlab/coreutils@^5.1.13", "@jupyterlab/coreutils@^5.1.5":
+  version "5.1.13"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/coreutils/-/coreutils-5.1.13.tgz#d37234d6f5317eaf634774fa87ebee452246adc0"
+  integrity sha512-FBtlNTOKRhyhi1sECOpinNvfX6dVM3r8gwElRaMRFfpBwlffn9tQIC3RYzRSqQ+6+cyuCpQzXPuGHQT63ciM/w==
   dependencies:
     "@lumino/coreutils" "^1.5.3"
     "@lumino/disposable" "^1.4.3"
@@ -602,13 +602,13 @@
     "@lumino/coreutils" "^1.5.3"
 
 "@jupyterlab/ui-components@^3.0.2", "@jupyterlab/ui-components@^3.0.8", "@jupyterlab/ui-components@^3.1.12", "@jupyterlab/ui-components@^3.1.5":
-  version "3.1.12"
-  resolved "https://registry.yarnpkg.com/@jupyterlab/ui-components/-/ui-components-3.1.12.tgz#88af260d5bd030253db3818686704e7c5c2afbe2"
-  integrity sha512-kD9tS1DdZg5smBUNqrVSpwkuL2q23xf0tDcewDSsj1I12SebSi6VCn1RN3C+avSgOhVBmqg9Y/1nuyK3OHIrXg==
+  version "3.1.13"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/ui-components/-/ui-components-3.1.13.tgz#d8d32fe0dd56cc7b3fdfbf04897a4cde9ad3a189"
+  integrity sha512-BZfCUlrNmL1iV9oHmJgLL6SPXOUJYV77okV7IKarel/4nt9dM/sJOdvVC7B6SwfjBiB+cPvVwQdVjbwVbYRjWg==
   dependencies:
     "@blueprintjs/core" "^3.36.0"
     "@blueprintjs/select" "^3.15.0"
-    "@jupyterlab/coreutils" "^5.1.12"
+    "@jupyterlab/coreutils" "^5.1.13"
     "@lumino/algorithm" "^1.3.3"
     "@lumino/commands" "^1.12.0"
     "@lumino/coreutils" "^1.5.3"
