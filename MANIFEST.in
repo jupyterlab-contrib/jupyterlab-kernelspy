@@ -15,6 +15,9 @@ graft src
 graft style
 prune **/node_modules
 prune lib
+prune binder
+
+exclude screenshot.png
 
 # Patterns to exclude from any directory
 global-exclude *~
