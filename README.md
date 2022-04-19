@@ -2,7 +2,7 @@
 
 [![Extension status](https://img.shields.io/badge/status-ready-success "ready to be used")](https://jupyterlab-contrib.github.io/)
 [![Github Actions Status](https://github.com/jupyterlab-contrib/jupyterlab-kernelspy/workflows/Build/badge.svg)](https://github.com/jupyterlab-contrib/jupyterlab-kernelspy/actions?query=workflow%3ABuild)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jupyterlab-contrib/jupyterlab-kernelspy/master?urlpath=lab)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jupyterlab-contrib/jupyterlab-kernelspy/master?urlpath=lab) [![PyPI](https://img.shields.io/pypi/v/jupyterlab-kernelspy)](https://pypi.org/project/jupyterlab-kernelspy)
 
 A Jupyter Lab extension for inspecting messages to/from a kernel.
 
