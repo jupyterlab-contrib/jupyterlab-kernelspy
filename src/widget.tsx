@@ -224,7 +224,7 @@ export class KernelSpyView extends Widget {
     this.id = `kernelspy-${UUID.uuid4()}`;
     this.title.label = 'Kernel spy';
     this.title.closable = true;
-    this.title.iconRenderer = jsonIcon;
+    this.title.icon = jsonIcon;
 
     const layout = (this.layout = new BoxLayout());
 
