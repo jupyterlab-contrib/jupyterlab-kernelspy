@@ -66,11 +66,10 @@
     "@lumino/widgets": "^2.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-inspector": "^5.0.1"
+    "react-inspector": "^6.0.2"
   },
   "devDependencies": {
     "@jupyterlab/builder": "^4.0.0",
-    "@jupyterlab/buildutils": "^3.0.0-beta.6",
     "@jupyterlab/docregistry": "^4.0.4",
     "@jupyterlab/services": "^7.0.4",
     "@lumino/commands": "^2.0.1",
@@ -186,7 +185,8 @@
     "rules": {
       "property-no-vendor-prefix": null,
       "selector-no-vendor-prefix": null,
-      "value-no-vendor-prefix": null
+      "value-no-vendor-prefix": null,
+      "selector-class-pattern": null
     }
   }
 }
