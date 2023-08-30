@@ -137,7 +137,7 @@ function addCommands(
   commands.addCommand(CommandIDs.newSpy, {
     label: 'New kernel spy',
     caption: 'Open a window to inspect messages sent to/from a kernel',
-    iconClass: 'jp-Icon jp-Icon-16 jp-kernelspyIcon',
+    iconClass: 'jp-Icon jp-Icon-16 jp-kernelspy-icon',
     isEnabled: hasKernel,
     execute: args => {
       let notebook: NotebookPanel | null;

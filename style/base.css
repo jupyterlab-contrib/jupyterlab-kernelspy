@@ -18,8 +18,7 @@
   background-color: var(--jp-layout-color0);
   display: grid;
   grid-template-columns: max-content auto;
-  grid-column-gap: 12px;
-  grid-row-gap: 2px;
+  grid-gap: 2px 12px;
   align-content: start;
 }
 
@@ -45,7 +44,7 @@ button.jp-kernelspy-threadcollapser {
   border: none;
 }
 
-.jp-kernelspyIcon {
+.jp-kernelspy-icon {
   background-image: var(--jp-icon-json);
 }
 

@@ -1,5 +1,3 @@
-import { IIterator } from '@lumino/algorithm';
-
 import { VDomModel } from '@jupyterlab/apputils';
 
 import { Kernel, KernelMessage } from '@jupyterlab/services';
@@ -15,7 +13,10 @@ function isHeader(
   return candidate.msg_id !== undefined;
 }
 
-export class ThreadIterator implements IIterator<ThreadIterator.IElement> {
+/**
+ * An iterator class which itterates over the message thread being received
+ */
+export class ThreadIterator {
   constructor(threads: MessageThread[], collapsed: { [key: string]: boolean }) {
     this._threads = threads;
     this._collapsed = collapsed;
@@ -27,27 +28,81 @@ export class ThreadIterator implements IIterator<ThreadIterator.IElement> {
     return this;
   }
 
+  [Symbol.iterator]() {
+    // iterator returns a javascript object having at least 1 next function
+    return {
+      next: () => {
+        if (this._child) {
+          const next = this._child.next();
+          // Return the child until it can't be anymore
+          if (next !== undefined) {
+            return { value: next, done: false };
+          }
+          // once there are no more children,
+          // Start by saying child is null
+          this._child = null;
+        }
+        // Till this point the index hasn't been added
+        // Therefore when it first meets this line gets to zero
+        // Move to next thread
+        ++this._index;
+        // Hence when reaching end of the array it exits (done)
+        if (this._index >= this._threads.length) {
+          return { done: true };
+        }
+        // A variable to understand which part of the thread we touch first
+        // Starting from index 1 then moving ahead
+        const entry = this._threads[this._index];
+        if (
+          entry.children.length > 0 &&
+          !this._collapsed[entry.args.msg.header.msg_id]
+        ) {
+          // If there are children and collapse is false
+          // Iterate over it's children
+          this._child = new ThreadIterator(entry.children, this._collapsed);
+        }
+        // But do return the current index position arguments and
+        return {
+          value: { args: entry.args, hasChildren: entry.children.length > 0 },
+          done: false
+        };
+      }
+    };
+  }
+
+  // The iteration function
   next(): ThreadIterator.IElement | undefined {
+    // if child exists, check if the child has more children.
     if (this._child) {
       const next = this._child.next();
+      // Return the child until it can't be anymore
       if (next !== undefined) {
         return next;
       }
+      // once there are no more children,
+      // Start by saying child is null
       this._child = null;
     }
+    // Till this point the index hasn't been added
+    // Therefore when it first meets this line gets to zero
     // Move to next thread
     ++this._index;
+    // Hence when reaching end of the array it exits (done)
     if (this._index >= this._threads.length) {
       return undefined;
     }
+    // A variable to understand which part of the thread we touch first
+    // Starting from index 1 then moving ahead
     const entry = this._threads[this._index];
     if (
       entry.children.length > 0 &&
       !this._collapsed[entry.args.msg.header.msg_id]
     ) {
-      // Iterate over children after this
+      // If there are children and collapse is false
+      // Iterate over it's children
       this._child = new ThreadIterator(entry.children, this._collapsed);
     }
+    // But do return the current index position arguments and
     return { args: entry.args, hasChildren: entry.children.length > 0 };
   }
 

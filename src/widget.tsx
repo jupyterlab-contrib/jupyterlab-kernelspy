@@ -13,8 +13,6 @@ import {
   jsonIcon
 } from '@jupyterlab/ui-components';
 
-import { each } from '@lumino/algorithm';
-
 import { UUID } from '@lumino/coreutils';
 
 import { Message as luminoMessage } from '@lumino/messaging';
@@ -71,7 +69,7 @@ function msgNodeRenderer(args: InspectorNodeParams) {
       />
     );
   }
-  const msg = (data as unknown) as KernelMessage.IMessage;
+  const msg = data as unknown as KernelMessage.IMessage;
   return <span key={'node-label'}>{msg.header.msg_id}</span>;
 }
 
@@ -161,34 +159,36 @@ export class MessageLogView extends VDomRenderer<KernelSpyModel> {
     const threads = new ThreadIterator(model.tree, this.collapsed);
 
     let first = true;
-    each(threads, ({ args, hasChildren }) => {
-      const depth = model.depth(args);
-      if (depth === 0) {
-        if (first) {
-          first = false;
-        } else {
-          // Insert spacer between main threads
-          elements.push(
-            <span
-              key={`'divider-${args.msg.header.msg_id}`}
-              className="jp-kernelspy-divider"
-            />
-          );
-        }
-      }
-      const collapsed = this.collapsed[args.msg.header.msg_id];
-      elements.push(
-        ...Message({
-          message: args.msg,
-          depth,
-          collapsed,
-          hasChildren,
-          onCollapse: message => {
-            this.onCollapse(message);
+    for (const thread of threads) {
+      if (thread) {
+        const depth = model.depth(thread.args);
+        if (depth === 0) {
+          if (first) {
+            first = false;
+          } else {
+            // Insert spacer between main threads
+            elements.push(
+              <span
+                key={`'divider-${thread.args.msg.header.msg_id}`}
+                className="jp-kernelspy-divider"
+              />
+            );
           }
-        })
-      );
-    });
+        }
+        const collapsed = this.collapsed[thread.args.msg.header.msg_id];
+        elements.push(
+          ...Message({
+            message: thread.args.msg,
+            depth,
+            collapsed,
+            hasChildren: thread.hasChildren,
+            onCollapse: message => {
+              this.onCollapse(message);
+            }
+          })
+        );
+      }
+    }
     return elements;
   }
 
@@ -224,7 +224,7 @@ export class KernelSpyView extends Widget {
     this.id = `kernelspy-${UUID.uuid4()}`;
     this.title.label = 'Kernel spy';
     this.title.closable = true;
-    this.title.iconRenderer = jsonIcon;
+    this.title.icon = jsonIcon;
 
     const layout = (this.layout = new BoxLayout());
 

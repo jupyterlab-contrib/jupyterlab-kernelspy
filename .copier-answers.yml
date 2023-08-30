@@ -1,0 +1,15 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.1.0
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: <author_email>
+author_name: Vidar Tonaas Fauske
+has_binder: true
+has_settings: false
+kind: frontend
+labextension_name: jupyterlab-kernelspy
+project_short_description: A Jupyter Lab extension for inspecting messages to/from
+    a kernel
+python_name: jupyterlab_kernelspy
+repository: https://github.com/jupyterlab-contrib/jupyterlab-kernelspy.git
+test: false
+
